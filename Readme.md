@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Валерий Куликов](https://up.htmlacademy.ru/react/7/user/1296301).
-* Наставник: [Rail Sakhaviev](https://up.htmlacademy.ru/react/7/user/1331891).
+* Наставник: [Rail Sakhaviev](https://up.htmlacademy.ru/react/7/user/1331891)
 
 ---
 
