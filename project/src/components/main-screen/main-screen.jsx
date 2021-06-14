@@ -94,7 +94,7 @@ function MainScreen(props) {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {[...Array(offersCount)].map((key) => <OfferCard key={key}/>)}
+                {new Array(offersCount).fill(0).map((item, index) => item + index).map((key) => <OfferCard key={key}/>)}
               </div>
             </section>
             <div className="cities__right-section">
