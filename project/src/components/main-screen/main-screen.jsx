@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import OfferCard from '../offer-card/offer-card';
 import {Link} from 'react-router-dom';
 
-const cardKeys = [1, 2, 3, 4, 5];
-
 function MainScreen(props) {
-  const {offerCount} = props;
+  const {offersCount} = props;
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -78,7 +76,7 @@ function MainScreen(props) {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offerCount} places to stay in Amsterdam</b>
+              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex="0">
@@ -96,7 +94,7 @@ function MainScreen(props) {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {cardKeys.map((item) => <OfferCard key={item}/>)}
+                {[...Array(offersCount)].map((key) => <OfferCard key={key}/>)}
               </div>
             </section>
             <div className="cities__right-section">
@@ -111,7 +109,7 @@ function MainScreen(props) {
 }
 
 MainScreen.propTypes = {
-  offerCount: PropTypes.number.isRequired,
+  offersCount: PropTypes.number.isRequired,
 };
 
 export default MainScreen;
