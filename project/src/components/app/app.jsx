@@ -9,13 +9,12 @@ import SignInScreen from '../sign-in-screen/sign-in-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 
 function App(props) {
-  const {offersCount, offers, reviews} = props;
+  const {offers, reviews} = props;
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.MAIN}>
           <MainScreen
-            offersCount={offersCount}
             offers={offers}
             reviews={reviews}
           />
@@ -40,7 +39,6 @@ function App(props) {
 }
 
 App.propTypes = {
-  offersCount: PropTypes.number.isRequired,
   offers: PropTypes.array.isRequired,
   reviews: PropTypes.array.isRequired,
 };

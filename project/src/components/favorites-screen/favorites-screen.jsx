@@ -1,22 +1,21 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import FavoriteCity from '../favorite-city/favorite-city';
 import PropTypes from 'prop-types';
+import FavoriteCity from '../favorite-city/favorite-city';
 
 function FavoritesScreen(props) {
   const {offers} = props;
 
   const cityOffers = {};
-  offers.forEach(({isFavorite, city}) => {
-    if (isFavorite) {
-      cityOffers[city.name] = [];
-    }
-  });
 
   offers.forEach((offer) => {
-    if (offer.isFavorite) {
-      cityOffers[offer.city.name].push(offer);
+    if (!offer.isFavorite) {
+      return;
     }
+    if (!cityOffers[offer.city.name]) {
+      cityOffers[offer.city.name] = [];
+    }
+    cityOffers[offer.city.name].push(offer);
   });
 
   const favoriteCityOffers = Object.entries(cityOffers);
@@ -56,7 +55,7 @@ function FavoritesScreen(props) {
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
-              {favoriteCityOffers.map((favoriteOffers) => <FavoriteCity favoriteOffers={favoriteOffers}  key={favoriteOffers[0]}/>)}
+              {favoriteCityOffers.map(([city, favoriteOffers]) => <FavoriteCity city={city} favoriteOffers={favoriteOffers} key={city}/>)}
             </ul>
           </section>
         </div>
@@ -72,11 +71,11 @@ function FavoritesScreen(props) {
 
 FavoritesScreen.propTypes = {
   offers: PropTypes.arrayOf(PropTypes.shape({
-    isFavorite: PropTypes.bool,
+    isFavorite: PropTypes.bool.isRequired,
     city: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-  })),
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired).isRequired,
 };
 
 

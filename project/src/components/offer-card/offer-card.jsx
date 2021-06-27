@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import offerCardProp from './offer-card.prop';
 import {useHistory} from 'react-router-dom';
 import {AppRoute} from '../../const';
 import PropTypes from 'prop-types';
+import offerCardProp from './offer-card.prop';
 
 function CardOffer(props) {
-  const {offer, cardHoverHandler} = props;
+  const {offer, onCardHover} = props;
   const history = useHistory();
   const {
     isPremium,
@@ -19,7 +19,7 @@ function CardOffer(props) {
     id,
   } = offer;
   return (
-    <article className="cities__place-card place-card" onMouseOver={() => cardHoverHandler(id)}>
+    <article className="cities__place-card place-card" onMouseOver={() => onCardHover(id)}>
       {isPremium ? <div className="place-card__mark"><span>Premium</span></div> : ''}
       <div className="cities__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/:${id}`}>
@@ -57,7 +57,7 @@ function CardOffer(props) {
 
 CardOffer.propTypes = {
   offer: offerCardProp,
-  cardHoverHandler: PropTypes.func,
+  onCardHover: PropTypes.func.isRequired,
 };
 
 export default CardOffer;

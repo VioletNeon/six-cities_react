@@ -1,10 +1,17 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
-import {Link} from 'react-router-dom';
+import Map from '../map/map';
+
+const city = {
+  lat: 52.38333,
+  lng: 4.9,
+  zoom: 12,
+};
 
 function MainScreen(props) {
-  const {offersCount, offers} = props;
+  const {offers} = props;
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -74,9 +81,10 @@ function MainScreen(props) {
         </div>
         <div className="cities">
           <div className="cities__places-container container">
-            <OfferCardsList offers={offers} offersCount={offersCount} />
+            <OfferCardsList offers={offers} />
             <div className="cities__right-section">
               <section className="cities__map map">
+                <Map city={city} points={offers}/>
               </section>
             </div>
           </div>
@@ -87,7 +95,6 @@ function MainScreen(props) {
 }
 
 MainScreen.propTypes = {
-  offersCount: PropTypes.number.isRequired,
   offers: PropTypes.array.isRequired,
 };
 
