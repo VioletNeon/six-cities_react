@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import offerCardProp from './offer-card.prop';
 
 function CardOffer(props) {
-  const {offer, onCardHover} = props;
+  const {offer, onCardHover, isNearPlace} = props;
   const history = useHistory();
   const {
     isPremium,
@@ -19,9 +19,9 @@ function CardOffer(props) {
     id,
   } = offer;
   return (
-    <article className="cities__place-card place-card" onMouseOver={() => onCardHover(id)}>
+    <article className={`${isNearPlace ? 'near-places__card' : 'cities__place-card'} place-card`} onMouseOver={() => onCardHover(id)}>
       {isPremium ? <div className="place-card__mark"><span>Premium</span></div> : ''}
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className={`${isNearPlace ? 'near-places__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
         <Link to={`/offer/:${id}`}>
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"/>
         </Link>
@@ -58,6 +58,7 @@ function CardOffer(props) {
 CardOffer.propTypes = {
   offer: offerCardProp,
   onCardHover: PropTypes.func.isRequired,
+  isNearPlace: PropTypes.bool.isRequired,
 };
 
 export default CardOffer;

@@ -16,7 +16,6 @@ function App(props) {
         <Route exact path={AppRoute.MAIN}>
           <MainScreen
             offers={offers}
-            reviews={reviews}
           />
         </Route>
         <Route exact path={AppRoute.SIGN_IN}>
@@ -28,7 +27,10 @@ function App(props) {
           />
         </Route>
         <Route exact path={AppRoute.ROOM}>
-          <RoomScreen />
+          <RoomScreen
+            reviews={reviews}
+            offers={offers}
+          />
         </Route>
         <Route>
           <NotFoundScreen />
