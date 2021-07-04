@@ -1,8 +1,7 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {useHistory} from 'react-router-dom';
-import {AppRoute} from '../../const';
 import PropTypes from 'prop-types';
+import {Link, useHistory} from 'react-router-dom';
+import {AppRoute} from '../../const';
 import offerCardProp from './offer-card.prop';
 
 function CardOffer(props) {

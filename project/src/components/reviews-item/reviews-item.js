@@ -10,7 +10,7 @@ function ReviewsItem(props) {
     rating,
     user,
   } = review;
-  const msDate = dayjs(Date.parse(date));
+  const dateToMilliseconds = dayjs(Date.parse(date));
 
   return (
     <li className="reviews__item">
@@ -33,7 +33,7 @@ function ReviewsItem(props) {
         <p className="reviews__text">
           {comment}
         </p>
-        <time className="reviews__time" dateTime={msDate.format('YYYY-MM-DD')}>{msDate.format('MMMM YYYY')}</time>
+        <time className="reviews__time" dateTime={dateToMilliseconds.format('YYYY-MM-DD')}>{dateToMilliseconds.format('MMMM YYYY')}</time>
       </div>
     </li>
   );

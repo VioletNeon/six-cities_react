@@ -14,4 +14,6 @@ const Cities = {
   DUSSELDORF: 'Dusseldorf',
 };
 
-export {AppRoute, Cities};
+const cities = Object.values(Cities);
+
+export {AppRoute, cities};

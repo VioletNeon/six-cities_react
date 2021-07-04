@@ -1,8 +1,11 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import OfferCardsList from '../offer-cards-list/offer-cards-list';
+import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+import {ActionCreator} from '../../store/action';
 import Map from '../map/map';
+import OfferCardsList from '../offer-cards-list/offer-cards-list';
+import {CitiesList} from '../cities-list/cities-list';
 
 const city = {
   lat: 52.38333,
@@ -11,7 +14,7 @@ const city = {
 };
 
 function MainScreen(props) {
-  const {offers} = props;
+  const {activeCityOffers, activeCity} = props;
   const isNearPlaces = false;
   return (
     <div className="page page--gray page--main">
@@ -46,45 +49,14 @@ function MainScreen(props) {
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <Link className="locations__item-link tabs__item" to="#">
-                  <span>Paris</span>
-                </Link>
-              </li>
-              <li className="locations__item">
-                <Link className="locations__item-link tabs__item" to="#">
-                  <span>Cologne</span>
-                </Link>
-              </li>
-              <li className="locations__item">
-                <Link className="locations__item-link tabs__item" to="#">
-                  <span>Brussels</span>
-                </Link>
-              </li>
-              <li className="locations__item">
-                <Link className="locations__item-link tabs__item tabs__item--active" to="#">
-                  <span>Amsterdam</span>
-                </Link>
-              </li>
-              <li className="locations__item">
-                <Link className="locations__item-link tabs__item" to="#">
-                  <span>Hamburg</span>
-                </Link>
-              </li>
-              <li className="locations__item">
-                <Link className="locations__item-link tabs__item" to="#">
-                  <span>Dusseldorf</span>
-                </Link>
-              </li>
-            </ul>
+            <CitiesList citiesOffers={props} />
           </section>
         </div>
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offers.length} places to stay in Amsterdam</b>
+              <b className="places__found">{activeCityOffers.length} places to stay in {activeCity}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex="0">
@@ -100,11 +72,11 @@ function MainScreen(props) {
                   <li className="places__option" tabIndex="0">Top rated first</li>
                 </ul>
               </form>
-              <OfferCardsList offers={offers} isNearPlaces={isNearPlaces} />
+              <OfferCardsList isNearPlaces={isNearPlaces} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map city={city} points={offers}/>
+                <Map city={city}/>
               </section>
             </div>
           </div>
@@ -115,7 +87,20 @@ function MainScreen(props) {
 }
 
 MainScreen.propTypes = {
-  offers: PropTypes.array.isRequired,
+  activeCityOffers: PropTypes.array.isRequired,
+  activeCity: PropTypes.string.isRequired,
 };
 
-export default MainScreen;
+const mapStateToProps = (state) => ({
+  activeCity: state.city,
+  activeCityOffers: state.cityOffers,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onCitySelection(activeCity) {
+    dispatch(ActionCreator.changeCityOffers(activeCity));
+  },
+});
+
+export {MainScreen};
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
