@@ -1,5 +1,6 @@
 import React, {useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 import leaflet from '../../../node_modules/leaflet/dist/leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map/use-map';
@@ -10,14 +11,14 @@ const defaultIcon = leaflet.icon({
   iconAnchor: [15, 30],
 });
 
-function Map({city, points}) {
+function Map({city, activeCityPoints}) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
   let markers = [];
 
   useEffect(() => {
     if (map) {
-      points.forEach((point) => {
+      activeCityPoints.forEach((point) => {
         markers.push(
           leaflet
             .marker({
@@ -36,7 +37,7 @@ function Map({city, points}) {
       });
       markers = [];
     };
-  }, [map, points]);
+  }, [map, activeCityPoints]);
 
   return (
     <div
@@ -50,7 +51,12 @@ function Map({city, points}) {
 
 Map.propTypes = {
   city: PropTypes.object.isRequired,
-  points: PropTypes.arrayOf(PropTypes.object).isRequired,
+  activeCityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default Map;
+const mapStateToProps = (state) => ({
+  activeCityPoints: state.cityOffers,
+});
+
+export {Map};
+export default connect(mapStateToProps, null)(Map);
