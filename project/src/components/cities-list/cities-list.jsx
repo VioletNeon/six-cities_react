@@ -1,12 +1,9 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {cities} from '../../const';
-import {ActionCreator} from '../../store/action';
 
-function CitiesList({citiesOffers}) {
-  const {activeCity, onCitySelection} = citiesOffers;
+export default function CitiesList(props) {
+  const {activeCity, onCitySelection, cities} = props;
   return (
     <ul className="locations__list tabs__list">
       {cities.map((city) => (
@@ -22,21 +19,7 @@ function CitiesList({citiesOffers}) {
 }
 
 CitiesList.propTypes = {
-  citiesOffers: PropTypes.shape({
-    activeCity: PropTypes.string.isRequired,
-    onCitySelection: PropTypes.func.isRequired,
-  }).isRequired,
+  activeCity: PropTypes.string.isRequired,
+  onCitySelection: PropTypes.func.isRequired,
+  cities: PropTypes.array.isRequired,
 };
-
-const mapStateToProps = (state) => ({
-  activeCity: state.city,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onCitySelection(city) {
-    dispatch(ActionCreator.changeCityOffers(city));
-  },
-});
-
-export {CitiesList};
-export default connect(mapStateToProps, mapDispatchToProps)(CitiesList);

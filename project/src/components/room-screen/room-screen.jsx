@@ -1,10 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import Comments from '../comments/comments';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
-import PropTypes from 'prop-types';
 
 const city = {
   lat: 52.38333,
@@ -176,13 +176,13 @@ function RoomScreen(props) {
             </div>
           </div>
           <section className="property__map map">
-            <Map city={city} points={nearOffers}/>
+            <Map city={city} activeCityPoints={nearOffers} />
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OfferCardsList offers={nearOffers} isNearPlaces={isNearPlaces} />
+            <OfferCardsList activeCityOffers={nearOffers} isNearPlaces={isNearPlaces} />
           </section>
         </div>
       </main>
