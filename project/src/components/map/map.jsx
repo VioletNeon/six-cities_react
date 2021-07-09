@@ -1,6 +1,5 @@
 import React, {useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import leaflet from '../../../node_modules/leaflet/dist/leaflet';
 import '../../../node_modules/leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map/use-map';
@@ -11,7 +10,13 @@ const defaultIcon = leaflet.icon({
   iconAnchor: [15, 30],
 });
 
-function Map({city, activeCityPoints}) {
+const customIcon = leaflet.icon({
+  iconUrl: 'img/pin-active.svg',
+  iconSize: [30, 30],
+  iconAnchor: [15, 30],
+});
+
+export default function Map({city, activeCityPoints, activeCardId}) {
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
   let markers = [];
@@ -25,7 +30,7 @@ function Map({city, activeCityPoints}) {
               lat: point.location.latitude,
               lng: point.location.longitude,
             }, {
-              icon: defaultIcon,
+              icon: point.id === activeCardId ? customIcon : defaultIcon,
             })
             .addTo(map),
         );
@@ -37,7 +42,7 @@ function Map({city, activeCityPoints}) {
       });
       markers = [];
     };
-  }, [map, activeCityPoints]);
+  }, [map, activeCityPoints, activeCardId]);
 
   return (
     <div
@@ -52,11 +57,5 @@ function Map({city, activeCityPoints}) {
 Map.propTypes = {
   city: PropTypes.object.isRequired,
   activeCityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
+  activeCardId: PropTypes.number,
 };
-
-const mapStateToProps = (state) => ({
-  activeCityPoints: state.cityOffers,
-});
-
-export {Map};
-export default connect(mapStateToProps, null)(Map);

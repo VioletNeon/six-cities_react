@@ -5,7 +5,8 @@ import {Link} from 'react-router-dom';
 import {ActionCreator} from '../../store/action';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
-import {CitiesList} from '../cities-list/cities-list';
+import CitiesList from '../cities-list/cities-list';
+import SortOption from '../sort-option/sort-option';
 
 const city = {
   lat: 52.38333,
@@ -14,8 +15,18 @@ const city = {
 };
 
 function MainScreen(props) {
-  const {activeCityOffers, activeCity} = props;
+  const {
+    activeCityOffers,
+    onCitySelection,
+    activeCity,
+    sortType,
+    onSortTypeAction,
+    activeCardId,
+    onActiveCardAction,
+    cities,
+  } = props;
   const isNearPlaces = false;
+
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -49,7 +60,7 @@ function MainScreen(props) {
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <CitiesList citiesOffers={props} />
+            <CitiesList onCitySelection={onCitySelection} activeCity={activeCity} cities={cities}/>
           </section>
         </div>
         <div className="cities">
@@ -57,26 +68,12 @@ function MainScreen(props) {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{activeCityOffers.length} places to stay in {activeCity}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex="0">
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select"/>
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom">
-                  <li className="places__option places__option--active" tabIndex="0">Popular</li>
-                  <li className="places__option" tabIndex="0">Price: low to high</li>
-                  <li className="places__option" tabIndex="0">Price: high to low</li>
-                  <li className="places__option" tabIndex="0">Top rated first</li>
-                </ul>
-              </form>
-              <OfferCardsList isNearPlaces={isNearPlaces} />
+              <SortOption sortType={sortType} onSortTypeAction={onSortTypeAction}/>
+              <OfferCardsList isNearPlaces={isNearPlaces} activeCityOffers={activeCityOffers} onCardHover={onActiveCardAction} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map city={city}/>
+                <Map city={city} activeCityPoints={activeCityOffers} activeCardId={activeCardId}/>
               </section>
             </div>
           </div>
@@ -89,16 +86,31 @@ function MainScreen(props) {
 MainScreen.propTypes = {
   activeCityOffers: PropTypes.array.isRequired,
   activeCity: PropTypes.string.isRequired,
+  sortType: PropTypes.string.isRequired,
+  activeCardId: PropTypes.number.isRequired,
+  onSortTypeAction: PropTypes.func.isRequired,
+  onActiveCardAction: PropTypes.func.isRequired,
+  onCitySelection: PropTypes.func.isRequired,
+  cities: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   activeCity: state.city,
   activeCityOffers: state.cityOffers,
+  sortType: state.sortType,
+  activeCardId: state.activeCardId,
+  cities: state.cities,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onCitySelection(activeCity) {
     dispatch(ActionCreator.changeCityOffers(activeCity));
+  },
+  onSortTypeAction(activeSortType) {
+    dispatch(ActionCreator.changeSortType(activeSortType));
+  },
+  onActiveCardAction(activeCardId) {
+    dispatch(ActionCreator.changeActiveCardId(activeCardId));
   },
 });
 

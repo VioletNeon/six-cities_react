@@ -17,8 +17,9 @@ function CardOffer(props) {
     type,
     id,
   } = offer;
+  const handleCardHover = (evt, cardId = 0) => isNearPlace ? evt.stopPropagation() : onCardHover(cardId);
   return (
-    <article className={`${isNearPlace ? 'near-places__card' : 'cities__place-card'} place-card`} onMouseOver={() => onCardHover(id)}>
+    <article className={`${isNearPlace ? 'near-places__card' : 'cities__place-card'} place-card`} onMouseLeave={handleCardHover} onMouseOver={(evt) => handleCardHover(evt, id)}>
       {isPremium ? <div className="place-card__mark"><span>Premium</span></div> : ''}
       <div className={`${isNearPlace ? 'near-places__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
         <Link to={`/offer/:${id}`}>
@@ -56,7 +57,7 @@ function CardOffer(props) {
 
 CardOffer.propTypes = {
   offer: offerCardProp,
-  onCardHover: PropTypes.func.isRequired,
+  onCardHover: PropTypes.func,
   isNearPlace: PropTypes.bool.isRequired,
 };
 
