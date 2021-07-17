@@ -57,7 +57,7 @@ function CardOffer(props) {
 
 CardOffer.propTypes = {
   offer: offerCardProp,
-  onCardHover: PropTypes.func,
+  onCardHover: PropTypes.func.isRequired,
   isNearPlace: PropTypes.bool.isRequired,
 };
 

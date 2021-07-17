@@ -41,6 +41,7 @@ export default function Map({city, activeCityPoints, activeCardId}) {
         map.removeLayer(marker);
       });
       markers = [];
+
     };
   }, [map, activeCityPoints, activeCardId]);
 

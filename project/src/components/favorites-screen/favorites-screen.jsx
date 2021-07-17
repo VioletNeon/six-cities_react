@@ -78,5 +78,4 @@ FavoritesScreen.propTypes = {
   }).isRequired).isRequired,
 };
 
-
 export default FavoritesScreen;

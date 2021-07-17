@@ -15,5 +15,5 @@ export default function OfferCardsList(props) {
 OfferCardsList.propTypes = {
   activeCityOffers: PropTypes.arrayOf(PropTypes.object).isRequired,
   isNearPlaces: PropTypes.bool.isRequired,
-  onCardHover: PropTypes.func,
+  onCardHover: PropTypes.func.isRequired,
 };
