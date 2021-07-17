@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import Comments from '../comments/comments';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
+import {ActionCreator} from '../../store/action';
 
 const city = {
   lat: 52.38333,
@@ -13,7 +15,7 @@ const city = {
 };
 
 function RoomScreen(props) {
-  const {reviews, offers} = props;
+  const {reviews, offers, onActiveCardChange} = props;
   const nearOffers = offers.slice(0, 3);
   const isNearPlaces = true;
   return (
@@ -182,7 +184,7 @@ function RoomScreen(props) {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OfferCardsList activeCityOffers={nearOffers} isNearPlaces={isNearPlaces} />
+            <OfferCardsList activeCityOffers={nearOffers} isNearPlaces={isNearPlaces} onCardHover={onActiveCardChange} />
           </section>
         </div>
       </main>
@@ -193,6 +195,14 @@ function RoomScreen(props) {
 RoomScreen.propTypes = {
   reviews: PropTypes.array.isRequired,
   offers: PropTypes.array.isRequired,
+  onActiveCardChange: PropTypes.func.isRequired,
 };
 
-export default RoomScreen;
+const mapDispatchToProps = (dispatch) => ({
+  onActiveCardChange(activeCardId) {
+    dispatch(ActionCreator.changeActiveCardId(activeCardId));
+  },
+});
+
+export {RoomScreen};
+export default connect(null, mapDispatchToProps)(RoomScreen);

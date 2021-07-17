@@ -23,4 +23,16 @@ const SortTypes = {
   TOP_RATED_FIRST: 'Top rated first',
 };
 
-export {AppRoute, cities, Cities, SortTypes};
+const AuthorizationStatus = {
+  AUTH: 'AUTH',
+  NO_AUTH: 'NO_AUTH',
+  UNKNOWN: 'UNKNOWN',
+};
+
+const APIRoute = {
+  HOTELS: '/hotels',
+  LOGIN: '/login',
+  LOGOUT: '/logout',
+};
+
+export {AppRoute, cities, Cities, SortTypes, AuthorizationStatus, APIRoute};

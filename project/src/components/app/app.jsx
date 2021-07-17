@@ -1,22 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Switch, Route, BrowserRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 import {AppRoute} from '../../const';
+import {isCheckedAuth} from '../../utils';
 import MainScreen from '../main-screen/main-screen';
 import FavoritesScreen from '../favorites-screen/favorites-screen';
 import RoomScreen from '../room-screen/room-screen';
 import SignInScreen from '../sign-in-screen/sign-in-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
+import LoadingScreen from '../loading-screen/loading-screen';
 
 function App(props) {
-  const {offers, reviews} = props;
+  const {authorizationStatus, isDataLoaded, reviews, offers} = props;
+
+  if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
+    return (
+      <LoadingScreen />
+    );
+  }
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.MAIN}>
-          <MainScreen
-            offers={offers}
-          />
+          <MainScreen />
         </Route>
         <Route exact path={AppRoute.SIGN_IN}>
           <SignInScreen />
@@ -41,8 +49,17 @@ function App(props) {
 }
 
 App.propTypes = {
-  offers: PropTypes.array.isRequired,
+  isDataLoaded: PropTypes.bool.isRequired,
   reviews: PropTypes.array.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
+  offers: PropTypes.array.isRequired,
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  isDataLoaded: state.isDataLoaded,
+  authorizationStatus: state.authorizationStatus,
+});
+
+export {App};
+export default connect(mapStateToProps, null)(App);
+
