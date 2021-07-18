@@ -5,6 +5,7 @@ const ActionType = {
   LOAD_HOTELS: 'loadHotels',
   REQUIRED_AUTHORIZATION: 'requiredAuthorization',
   LOGOUT: 'logout',
+  REDIRECT_TO_ROUTE: 'redirectToRoute',
 };
 
 const ActionCreator = {
@@ -33,6 +34,10 @@ const ActionCreator = {
   }),
   logout: () => ({
     type: ActionType.LOGOUT,
+  }),
+  redirectToRoute: (url) => ({
+    type: ActionType.REDIRECT_TO_ROUTE,
+    payload: url,
   }),
 };
 

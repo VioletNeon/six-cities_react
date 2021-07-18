@@ -1,5 +1,5 @@
 const AppRoute = {
-  SIGN_IN: '/login',
+  LOGIN: '/login',
   ROOM: '/offer/:id',
   FAVORITES: '/favorites',
   MAIN: '/',
