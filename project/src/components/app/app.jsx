@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Switch, Route, BrowserRouter} from 'react-router-dom';
+import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {AppRoute} from '../../const';
 import {isCheckedAuth} from '../../utils';
@@ -10,6 +10,8 @@ import RoomScreen from '../room-screen/room-screen';
 import SignInScreen from '../sign-in-screen/sign-in-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
+import PrivateRoute from '../private-route/private-route';
+import browserHistory from '../../browser-history';
 
 function App(props) {
   const {authorizationStatus, isDataLoaded, reviews, offers} = props;
@@ -21,24 +23,37 @@ function App(props) {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
-        <Route exact path={AppRoute.MAIN}>
-          <MainScreen />
+        <Route exact path={AppRoute.MAIN}
+          render={({history}) => (
+            <MainScreen
+              onBookmarkButtonClick={() => history.push(AppRoute.FAVORITES)}
+            />
+          )}
+        >
         </Route>
-        <Route exact path={AppRoute.SIGN_IN}>
+        <Route exact path={AppRoute.LOGIN}>
           <SignInScreen />
         </Route>
-        <Route exact path={AppRoute.FAVORITES}>
-          <FavoritesScreen
-            offers={offers}
-          />
-        </Route>
-        <Route exact path={AppRoute.ROOM}>
-          <RoomScreen
-            reviews={reviews}
-            offers={offers}
-          />
+        <PrivateRoute
+          exact
+          path={AppRoute.FAVORITES}
+          render={() => (
+            <FavoritesScreen
+              offers={offers}
+            />)}
+        >
+        </PrivateRoute>
+        <Route exact path={AppRoute.ROOM}
+          render={({history}) => (
+            <RoomScreen
+              reviews={reviews}
+              offers={offers}
+              onBookmarkButtonClick={() => history.push(AppRoute.FAVORITES)}
+            />
+          )}
+        >
         </Route>
         <Route>
           <NotFoundScreen />

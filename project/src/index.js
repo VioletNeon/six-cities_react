@@ -4,7 +4,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {AuthorizationStatus} from './const';
+import {AppRoute} from './const';
 import {reducer} from './store/reducer';
 import reviews from './mocks/reviews';
 import offers from './mocks/offers';
@@ -12,12 +12,19 @@ import App from './components/app/app';
 import {createAPI} from './services/api';
 import {ActionCreator} from './store/action';
 import {checkAuth, fetchHotelsList} from './store/api-actions';
+import {redirect} from './store/middlewares/redirect';
 
 const api = createAPI(
-  () => store.dispatch(ActionCreator.requireAuthorization(AuthorizationStatus.NO_AUTH)),
+  () => store.dispatch(ActionCreator.redirectToRoute(AppRoute.LOGIN)),
 );
 
-const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk.withExtraArgument(api))));
+const store = createStore(
+  reducer,
+  composeWithDevTools(
+    applyMiddleware(thunk.withExtraArgument(api)),
+    applyMiddleware(redirect),
+  ),
+);
 
 store.dispatch(checkAuth());
 store.dispatch(fetchHotelsList());

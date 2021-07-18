@@ -8,7 +8,12 @@ export default function CitiesList(props) {
     <ul className="locations__list tabs__list">
       {cities.map(({location, name}) => (
         <li className="locations__item" key={name}>
-          <Link className={`locations__item-link tabs__item ${name === activeCity ? 'tabs__item--active' : ''}`} onClick={() => onCitySelection(location, name)} to="#">
+          <Link
+            className={`locations__item-link tabs__item
+            ${name === activeCity ? 'tabs__item--active' : ''}`}
+            onClick={() => onCitySelection(location, name)}
+            to="#"
+          >
             <span>{name}</span>
           </Link>
         </li>

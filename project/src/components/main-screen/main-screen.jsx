@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const';
 import {ActionCreator} from '../../store/action';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
@@ -21,6 +22,7 @@ function MainScreen(props) {
     latitude,
     longitude,
     zoom,
+    onBookmarkButtonClick,
   } = props;
 
   const city = {
@@ -43,7 +45,7 @@ function MainScreen(props) {
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to="#">
+                  <Link className="header__nav-link header__nav-link--profile" to={AppRoute.LOGIN}>
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
                     <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
@@ -72,7 +74,12 @@ function MainScreen(props) {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{activeCityOffers.length} places to stay in {activeCity}</b>
               <SortOption sortType={sortType} onSortTypeChange={onSortTypeChange}/>
-              <OfferCardsList isNearPlaces={isNearPlaces} activeCityOffers={activeCityOffers} onCardHover={onActiveCardChange} />
+              <OfferCardsList
+                isNearPlaces={isNearPlaces}
+                activeCityOffers={activeCityOffers}
+                onCardHover={onActiveCardChange}
+                onBookmarkButtonClick={onBookmarkButtonClick}
+              />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
@@ -98,6 +105,7 @@ MainScreen.propTypes = {
   latitude: PropTypes.number.isRequired,
   longitude: PropTypes.number.isRequired,
   zoom: PropTypes.number.isRequired,
+  onBookmarkButtonClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

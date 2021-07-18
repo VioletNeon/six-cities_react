@@ -15,7 +15,7 @@ const city = {
 };
 
 function RoomScreen(props) {
-  const {reviews, offers, onActiveCardChange} = props;
+  const {reviews, offers, onActiveCardChange, onBookmarkButtonClick} = props;
   const nearOffers = offers.slice(0, 3);
   const isNearPlaces = true;
   return (
@@ -184,7 +184,12 @@ function RoomScreen(props) {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OfferCardsList activeCityOffers={nearOffers} isNearPlaces={isNearPlaces} onCardHover={onActiveCardChange} />
+            <OfferCardsList
+              activeCityOffers={nearOffers}
+              isNearPlaces={isNearPlaces}
+              onCardHover={onActiveCardChange}
+              onBookmarkButtonClick={onBookmarkButtonClick}
+            />
           </section>
         </div>
       </main>
@@ -196,6 +201,7 @@ RoomScreen.propTypes = {
   reviews: PropTypes.array.isRequired,
   offers: PropTypes.array.isRequired,
   onActiveCardChange: PropTypes.func.isRequired,
+  onBookmarkButtonClick: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
