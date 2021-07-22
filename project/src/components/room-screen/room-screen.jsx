@@ -1,23 +1,66 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import {Link, useParams, useLocation} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {AppRoute, AuthorizationStatus} from '../../const';
+import {generateKey, toUpperFirstLetter} from '../../utils';
 import Comments from '../comments/comments';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
 import {ActionCreator} from '../../store/action';
-
-const city = {
-  lat: 52.38333,
-  lng: 4.9,
-  zoom: 12,
-};
+import {fetchHotel, fetchNearbyHotels, fetchComments} from '../../store/api-actions';
+import LoadingScreen from '../loading-screen/loading-screen';
+import roomScreenProp from './room-screen.prop';
 
 function RoomScreen(props) {
-  const {reviews, offers, onActiveCardChange, onBookmarkButtonClick} = props;
-  const nearOffers = offers.slice(0, 3);
+  const {
+    nearbyOffers,
+    onActiveCardChange,
+    onBookmarkButtonClick,
+    offer, onHotelSelect,
+    authorizationStatus,
+    onHotelClearData,
+    comments,
+    activeCardId,
+  } = props;
+
+  const {id} = useParams();
+  const hotelURL = useLocation().pathname;
+  const nearbyHotelsURL =  `${hotelURL}/nearby`;
+  const commentsURL = AppRoute.COMMENTS + id;
+
+  useEffect(() => {
+    onHotelSelect(hotelURL, nearbyHotelsURL, commentsURL);
+    return onHotelClearData;
+  }, [id]);
+
+  const [hotel] = offer;
+  if (!hotel) { return <LoadingScreen />; }
+
+  const {
+    images, isPremium, title,
+    isFavorite, rating, type,
+    bedrooms, maxAdults, price,
+    goods, host, description,
+    city: {location},
+  } = hotel;
+
+  const {latitude, longitude, zoom} = location;
+
+  const cityMap = {
+    lat: latitude,
+    lng: longitude,
+    zoom: zoom,
+  };
+
+  const {avatarUrl, isPro, name} = host;
+
+  const threeNearbyOffers = nearbyOffers.slice(0, 3);
   const isNearPlaces = true;
+  const getRoomScreenKey = generateKey();
+  const offersMap = [...threeNearbyOffers, {...hotel, isCurrentOffer: true}];
+
   return (
     <div className="page">
       <header className="header">
@@ -52,36 +95,20 @@ function RoomScreen(props) {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              <div className="property__image-wrapper">
-                <img className="property__image" src={'img/room.jpg'} alt="Photo studio"/>
-              </div>
-              <div className="property__image-wrapper">
-                <img className="property__image" src={'img/apartment-01.jpg'} alt="Photo studio"/>
-              </div>
-              <div className="property__image-wrapper">
-                <img className="property__image" src={'img/apartment-02.jpg'} alt="Photo studio"/>
-              </div>
-              <div className="property__image-wrapper">
-                <img className="property__image" src={'img/apartment-03.jpg'} alt="Photo studio"/>
-              </div>
-              <div className="property__image-wrapper">
-                <img className="property__image" src={'img/studio-01.jpg'} alt="Photo studio"/>
-              </div>
-              <div className="property__image-wrapper">
-                <img className="property__image" src={'img/apartment-01.jpg'} alt="Photo studio"/>
-              </div>
+              {images.map((imageSrc) => (
+                <div className="property__image-wrapper" key={getRoomScreenKey()}>
+                  <img className="property__image" src={imageSrc} alt="Photo studio"/>
+                </div>
+              ),
+              )}
             </div>
           </div>
           <div className="property__container container">
             <div className="property__wrapper">
-              <div className="property__mark">
-                <span>Premium</span>
-              </div>
+              {isPremium && <div className="property__mark"><span>Premium</span></div>}
               <div className="property__name-wrapper">
-                <h1 className="property__name">
-                  Beautiful &amp; luxurious studio at great location
-                </h1>
-                <button className="property__bookmark-button button" type="button">
+                <h1 className="property__name">{title}</h1>
+                <button className={`property__bookmark-button button ${isFavorite && 'property__bookmark-button--active'}`} type="button">
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark">
                     </use>
@@ -91,101 +118,63 @@ function RoomScreen(props) {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{width: '80%'}}>
+                  <span style={{width: `${Math.round(rating)*20}%`}}>
                   </span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="property__rating-value rating__value">4.8</span>
+                <span className="property__rating-value rating__value">{rating}</span>
               </div>
               <ul className="property__features">
                 <li className="property__feature property__feature--entire">
-                  Apartment
+                  {toUpperFirstLetter(type)}
                 </li>
                 <li className="property__feature property__feature--bedrooms">
-                  3 Bedrooms
+                  {bedrooms} Bedrooms
                 </li>
                 <li className="property__feature property__feature--adults">
-                  Max 4 adults
+                  Max {maxAdults} adults
                 </li>
               </ul>
               <div className="property__price">
-                <b className="property__price-value">&euro;120</b>
+                <b className="property__price-value">&euro;{price}</b>
                 <span className="property__price-text">&nbsp;night</span>
               </div>
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
-                  <li className="property__inside-item">
-                    Wi-Fi
-                  </li>
-                  <li className="property__inside-item">
-                    Washing machine
-                  </li>
-                  <li className="property__inside-item">
-                    Towels
-                  </li>
-                  <li className="property__inside-item">
-                    Heating
-                  </li>
-                  <li className="property__inside-item">
-                    Coffee machine
-                  </li>
-                  <li className="property__inside-item">
-                    Baby seat
-                  </li>
-                  <li className="property__inside-item">
-                    Kitchen
-                  </li>
-                  <li className="property__inside-item">
-                    Dishwasher
-                  </li>
-                  <li className="property__inside-item">
-                    Cabel TV
-                  </li>
-                  <li className="property__inside-item">
-                    Fridge
-                  </li>
+                  {goods.map((item) => <li className="property__inside-item" key={getRoomScreenKey()}>{item}</li>)}
                 </ul>
               </div>
               <div className="property__host">
                 <h2 className="property__host-title">Meet the host</h2>
                 <div className="property__host-user user">
                   <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="property__avatar user__avatar" src={'img/avatar-angelina.jpg'} width="74" height="74" alt="Host avatar"/>
+                    <img className="property__avatar user__avatar" src={avatarUrl} width="74" height="74" alt="Host avatar"/>
                   </div>
                   <span className="property__user-name">
-                    Angelina
+                    {name}
                   </span>
-                  <span className="property__user-status">
-                    Pro
-                  </span>
+                  {isPro && <span className="property__user-status">Pro</span>}
                 </div>
                 <div className="property__description">
-                  <p className="property__text">
-                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The
-                    building is green and from 18th century.
-                  </p>
-                  <p className="property__text">
-                    An independent House, strategically located between Rembrand Square and National Opera, but where
-                    the bustle of the city comes to rest in this alley flowery and colorful.
-                  </p>
+                  <p className="property__text">{description}</p>
                 </div>
               </div>
               <section className="property__reviews reviews">
-                <ReviewsList reviews={reviews}/>
-                <Comments />
+                <ReviewsList reviews={comments}/>
+                {authorizationStatus === AuthorizationStatus.AUTH && <Comments commentID={id}/>}
               </section>
             </div>
           </div>
           <section className="property__map map">
-            <Map city={city} activeCityPoints={nearOffers} />
+            <Map city={cityMap} activeCityPoints={offersMap} activeCardId={activeCardId}/>
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <OfferCardsList
-              activeCityOffers={nearOffers}
+              activeCityOffers={threeNearbyOffers}
               isNearPlaces={isNearPlaces}
               onCardHover={onActiveCardChange}
               onBookmarkButtonClick={onBookmarkButtonClick}
@@ -198,17 +187,38 @@ function RoomScreen(props) {
 }
 
 RoomScreen.propTypes = {
-  reviews: PropTypes.array.isRequired,
-  offers: PropTypes.array.isRequired,
+  offer: roomScreenProp,
+  comments: PropTypes.array.isRequired,
+  nearbyOffers: PropTypes.array.isRequired,
   onActiveCardChange: PropTypes.func.isRequired,
   onBookmarkButtonClick: PropTypes.func.isRequired,
+  onHotelSelect: PropTypes.func.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
+  onHotelClearData: PropTypes.func.isRequired,
+  activeCardId: PropTypes.number.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+  offer: state.offer,
+  nearbyOffers: state.nearbyOffers,
+  comments: state.comments,
+  authorizationStatus: state.authorizationStatus,
+  activeCardId: state.activeCardId,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onActiveCardChange(activeCardId) {
     dispatch(ActionCreator.changeActiveCardId(activeCardId));
   },
+  onHotelSelect(hotelURL, nearbyHotelURL, commentsURL) {
+    dispatch(fetchHotel(hotelURL));
+    dispatch(fetchNearbyHotels(nearbyHotelURL));
+    dispatch(fetchComments(commentsURL));
+  },
+  onHotelClearData() {
+    dispatch(ActionCreator.clearHotelData());
+  },
 });
 
 export {RoomScreen};
-export default connect(null, mapDispatchToProps)(RoomScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(RoomScreen);

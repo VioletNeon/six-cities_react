@@ -9,10 +9,10 @@ const adaptToClient = (dataItem) => {
     dataItem,
     {
       host: {
-        avatarUrl: dataItem.avatar_url,
-        id: dataItem.id,
-        isPro: dataItem.is_pro,
-        name: dataItem.name,
+        avatarUrl: dataItem.host.avatar_url,
+        id: dataItem.host.id,
+        isPro: dataItem.host.is_pro,
+        name: dataItem.host.name,
       },
       isFavorite: dataItem.is_favorite,
       isPremium: dataItem.is_premium,
@@ -29,4 +29,26 @@ const adaptToClient = (dataItem) => {
   return adaptedItem;
 };
 
-export {isCheckedAuth, adaptToClient};
+const adaptCommentToClient = (dataItem) => (
+  Object.assign(
+    {},
+    dataItem,
+    {
+      user: {
+        avatarUrl: dataItem.user.avatar_url,
+        id: dataItem.user.id,
+        isPro: dataItem.user.is_pro,
+        name: dataItem.user.name,
+      },
+    },
+  )
+);
+
+const generateKey = () => {
+  let startNum = 0;
+  return () => startNum++;
+};
+
+const toUpperFirstLetter = (str) => !str ? str : (str[0].toUpperCase() + str.slice(1));
+
+export {isCheckedAuth, adaptToClient, generateKey, toUpperFirstLetter, adaptCommentToClient};

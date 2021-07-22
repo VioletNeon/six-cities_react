@@ -1,8 +1,10 @@
 const AppRoute = {
   LOGIN: '/login',
-  ROOM: '/offer/:id',
+  ROOM: '/hotels/:id',
   FAVORITES: '/favorites',
   MAIN: '/',
+  COMMENTS: '/comments/',
+  NOT_FOUND: '/not-found',
 };
 
 const Cities = {
