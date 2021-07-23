@@ -6,6 +6,10 @@ const ActionType = {
   REQUIRED_AUTHORIZATION: 'requiredAuthorization',
   LOGOUT: 'logout',
   REDIRECT_TO_ROUTE: 'redirectToRoute',
+  LOAD_HOTEL: 'loadHotel',
+  LOAD_NEARBY_HOTELS: 'loadNearbyHotels',
+  LOAD_COMMENTS: 'loadComments',
+  CLEAR_HOTEL_DATA: 'clearHotelData',
 };
 
 const ActionCreator = {
@@ -38,6 +42,21 @@ const ActionCreator = {
   redirectToRoute: (url) => ({
     type: ActionType.REDIRECT_TO_ROUTE,
     payload: url,
+  }),
+  loadHotel: (offer) => ({
+    type: ActionType.LOAD_HOTEL,
+    offer: [offer],
+  }),
+  loadNearbyHotels: (nearbyOffers) => ({
+    type: ActionType.LOAD_NEARBY_HOTELS,
+    nearbyOffers,
+  }),
+  loadComments: (comments) => ({
+    type: ActionType.LOAD_COMMENTS,
+    comments,
+  }),
+  clearHotelData: () => ({
+    type: ActionType.CLEAR_HOTEL_DATA,
   }),
 };
 

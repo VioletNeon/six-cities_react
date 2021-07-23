@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Switch, Route, Router as BrowserRouter} from 'react-router-dom';
+import {Switch, Route, Router} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {AppRoute} from '../../const';
 import {isCheckedAuth} from '../../utils';
@@ -14,7 +14,7 @@ import PrivateRoute from '../private-route/private-route';
 import browserHistory from '../../browser-history';
 
 function App(props) {
-  const {authorizationStatus, isDataLoaded, reviews, offers} = props;
+  const {authorizationStatus, isDataLoaded, offers} = props;
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -23,7 +23,7 @@ function App(props) {
   }
 
   return (
-    <BrowserRouter history={browserHistory}>
+    <Router history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.MAIN}
           render={({history}) => (
@@ -48,24 +48,21 @@ function App(props) {
         <Route exact path={AppRoute.ROOM}
           render={({history}) => (
             <RoomScreen
-              reviews={reviews}
-              offers={offers}
               onBookmarkButtonClick={() => history.push(AppRoute.FAVORITES)}
             />
           )}
         >
         </Route>
-        <Route>
+        <Route path={AppRoute.NOT_FOUND} >
           <NotFoundScreen />
         </Route>
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 }
 
 App.propTypes = {
   isDataLoaded: PropTypes.bool.isRequired,
-  reviews: PropTypes.array.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
   offers: PropTypes.array.isRequired,
 };

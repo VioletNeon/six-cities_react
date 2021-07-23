@@ -30,9 +30,9 @@ function CardOffer(props) {
       onMouseLeave={handleCardHover}
       onMouseOver={(evt) => handleCardHover(evt, id)}
     >
-      {isPremium ? <div className="place-card__mark"><span>Premium</span></div> : ''}
+      {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
       <div className={`${isNearPlace ? 'near-places__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
-        <Link to={`/offer/:${id}`}>
+        <Link to={`/hotels/${id}`}>
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"/>
         </Link>
       </div>
@@ -61,7 +61,7 @@ function CardOffer(props) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/:${id}`}>{title}</Link>
+          <Link to={`/hotels/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

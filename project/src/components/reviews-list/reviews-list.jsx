@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import ReviewsItem from '../reviews-item/reviews-item';
 
 function ReviewsList({reviews}) {
+  const sortedReviews = reviews.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+  const reviewsList = sortedReviews.length > 10 ? reviews.slice(0, 10) : reviews;
   return (
     <>
-      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
+      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviewsList.length}</span></h2>
       <ul className="reviews__list">
-        {reviews.map((review) => <ReviewsItem review={review} key={review.id}/>)}
+        {reviewsList.map((review) => <ReviewsItem review={review} key={review.id}/>)}
       </ul>
     </>
   );

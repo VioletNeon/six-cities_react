@@ -1,11 +1,24 @@
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {AppRoute} from '../../const';
+import {toComment} from '../../store/api-actions';
 
-function Comments() {
-  const [, setRating] = useState(0);
-  const [, setReview] = useState('');
+function Comments({onSubmit, commentID}) {
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('');
+
+  const commentURL = AppRoute.COMMENTS + commentID;
 
   const buttonSubmitHandler = (evt) => {
     evt.preventDefault();
+
+    onSubmit(commentURL, {
+      comment: review,
+      rating: rating,
+    });
+
+    setReview('');
   };
 
   const ratingChangeHandler = (evt) => {
@@ -51,17 +64,43 @@ function Comments() {
           </svg>
         </label>
       </div>
-      <textarea className="reviews__textarea form__textarea" id="review" name="review" onChange={reviewChangeHandler} placeholder="Tell how was your stay, what you like and what can be improved">
+      <textarea
+        className="reviews__textarea form__textarea"
+        minLength={50}
+        maxLength={300}
+        value={review}
+        id="review"
+        name="review"
+        onChange={reviewChangeHandler}
+        placeholder="Tell how was your stay, what you like and what can be improved"
+      >
       </textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled="">Submit</button>
+        <button
+          className="reviews__submit form__submit button"
+          type="submit"
+          disabled={!(rating > 0 && review.length > 50)}
+        >Submit
+        </button>
       </div>
     </form>
   );
 }
 
-export default Comments;
+Comments.propTypes = {
+  commentID: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onSubmit(commentURL, commentData) {
+    dispatch(toComment(commentURL, commentData));
+  },
+});
+
+export {Comments};
+export default connect(null, mapDispatchToProps)(Comments);

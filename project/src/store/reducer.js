@@ -33,11 +33,14 @@ const initialState = {
   sortType: SortTypes.POPULAR,
   activeCardId: 0,
   cities: [],
-  authorizationStatus: AuthorizationStatus.UNKNOWN,
+  authorizationStatus: AuthorizationStatus.NO_AUTH,
   isDataLoaded: false,
   latitude: DEFAULT_CITY.latitude,
   longitude: DEFAULT_CITY.longitude,
   zoom: DEFAULT_CITY.zoom,
+  offer: [],
+  nearbyOffers: [],
+  comments: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -80,6 +83,28 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         authorizationStatus: AuthorizationStatus.NO_AUTH,
+      };
+    case ActionType.LOAD_HOTEL:
+      return {
+        ...state,
+        offer: action.offer,
+      };
+    case ActionType.LOAD_NEARBY_HOTELS:
+      return {
+        ...state,
+        nearbyOffers: action.nearbyOffers,
+      };
+    case ActionType.LOAD_COMMENTS:
+      return {
+        ...state,
+        comments: action.comments,
+      };
+    case ActionType.CLEAR_HOTEL_DATA:
+      return {
+        ...state,
+        offer: initialState.offer,
+        nearbyOffers: initialState.nearbyOffers,
+        comments: initialState.comments,
       };
     default:
       return state;

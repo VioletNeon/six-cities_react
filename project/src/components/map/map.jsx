@@ -30,7 +30,7 @@ export default function Map({city, activeCityPoints, activeCardId}) {
               lat: point.location.latitude,
               lng: point.location.longitude,
             }, {
-              icon: point.id === activeCardId ? customIcon : defaultIcon,
+              icon: point.id === activeCardId || point.isCurrentOffer ? customIcon : defaultIcon,
             })
             .addTo(map),
         );
@@ -58,5 +58,5 @@ export default function Map({city, activeCityPoints, activeCardId}) {
 Map.propTypes = {
   city: PropTypes.object.isRequired,
   activeCityPoints: PropTypes.arrayOf(PropTypes.object).isRequired,
-  activeCardId: PropTypes.number,
+  activeCardId: PropTypes.number.isRequired,
 };

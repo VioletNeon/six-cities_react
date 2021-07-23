@@ -1,4 +1,6 @@
 import axios from 'axios';
+import browserHistory from '../browser-history';
+import {AppRoute} from '../const';
 
 const BASE_URL = 'https://7.react.pages.academy/six-cities';
 const REQUEST_TIMEOUT = 5000;
@@ -6,6 +8,7 @@ const REQUEST_TIMEOUT = 5000;
 const HttpCode = {
   UNAUTHORIZED: 401,
   BAD_REQUEST: 400,
+  NOT_FOUND: 404,
 };
 
 const token = localStorage.getItem('token') ?? '';
@@ -20,9 +23,12 @@ const createAPI = (onBadRequested) => {
   });
 
   const onSuccess = (response) => response;
+
   const onFail = (err) => {
     if (err.response.status === HttpCode.BAD_REQUEST) {
       onBadRequested();
+    } else if (err.status === HttpCode.NOT_FOUND) {
+      browserHistory.push(AppRoute.NOT_FOUND);
     }
     throw err;
   };
