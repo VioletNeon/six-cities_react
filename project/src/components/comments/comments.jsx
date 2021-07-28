@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {AppRoute} from '../../const';
+import {APIRoute} from '../../const';
 import {toComment} from '../../store/api-actions';
 
 function Comments({onSubmit, commentID}) {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
 
-  const commentURL = AppRoute.COMMENTS + commentID;
+  const commentURL = APIRoute.COMMENTS + commentID;
 
   const buttonSubmitHandler = (evt) => {
     evt.preventDefault();
@@ -103,4 +103,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export {Comments};
-export default connect(null, mapDispatchToProps)(Comments);
+export default connect(null, mapDispatchToProps)(memo(Comments));

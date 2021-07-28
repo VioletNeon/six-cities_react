@@ -1,7 +1,4 @@
-import {AuthorizationStatus} from './const';
-
-const isCheckedAuth = (authorizationStatus) =>
-  authorizationStatus === AuthorizationStatus.UNKNOWN;
+import {SortTypes} from './const';
 
 const adaptToClient = (dataItem) => {
   const adaptedItem = Object.assign(
@@ -44,11 +41,30 @@ const adaptCommentToClient = (dataItem) => (
   )
 );
 
-const generateKey = () => {
-  let startNum = 0;
-  return () => startNum++;
+const adaptAuthInfoToClient = (dataItem) => {
+  const adaptedItem = Object.assign(
+    {},
+    dataItem,
+    {
+      avatarUrl: dataItem.avatar_url,
+      isPro: dataItem.is_pro,
+    },
+  );
+
+  delete adaptedItem.avatar_url;
+  delete adaptedItem.is_pro;
+
+  return adaptedItem;
+};
+
+const getCityOffers = (city, citiesOffers) => citiesOffers.filter((offer) => offer.city.name === city);
+
+const sorting = {
+  [SortTypes.PRICE_LOW_TO_HIGH]: (offers) => offers.sort((a, b) => a.price - b.price),
+  [SortTypes.PRICE_HIGH_TO_LOW]: (offers) => offers.sort((a, b) => b.price - a.price),
+  [SortTypes.TOP_RATED_FIRST]: (offers) => offers.sort((a, b) => b.rating - a.rating),
 };
 
 const toUpperFirstLetter = (str) => !str ? str : (str[0].toUpperCase() + str.slice(1));
 
-export {isCheckedAuth, adaptToClient, generateKey, toUpperFirstLetter, adaptCommentToClient};
+export {adaptToClient, toUpperFirstLetter, adaptCommentToClient, adaptAuthInfoToClient, getCityOffers, sorting};

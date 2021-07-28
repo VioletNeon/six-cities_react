@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {login} from '../../store/api-actions';
+import {getCity} from '../../store/offers/selectors';
 
 function SignInScreen({onSubmit, activeCity}) {
   const loginRef = useRef();
@@ -10,11 +11,12 @@ function SignInScreen({onSubmit, activeCity}) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-
-    onSubmit({
-      login: loginRef.current.value,
-      password: passwordRef.current.value,
-    });
+    if (loginRef.current.value.length && passwordRef.current.value.length) {
+      onSubmit({
+        login: loginRef.current.value,
+        password: passwordRef.current.value,
+      });
+    }
   };
 
   return (
@@ -48,8 +50,10 @@ function SignInScreen({onSubmit, activeCity}) {
             <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input"
-                  ref={loginRef} type="email"
+                <input
+                  className="login__input form__input"
+                  ref={loginRef}
+                  type="email"
                   name="email"
                   placeholder="Email"
                   required=""
@@ -57,7 +61,8 @@ function SignInScreen({onSubmit, activeCity}) {
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input"
+                <input
+                  className="login__input form__input"
                   ref={passwordRef}
                   type="password"
                   name="password"
@@ -87,7 +92,7 @@ SignInScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  activeCity: state.city,
+  activeCity: getCity(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

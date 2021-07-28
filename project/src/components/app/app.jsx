@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {Switch, Route, Router} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {AppRoute} from '../../const';
-import {isCheckedAuth} from '../../utils';
 import MainScreen from '../main-screen/main-screen';
 import FavoritesScreen from '../favorites-screen/favorites-screen';
 import RoomScreen from '../room-screen/room-screen';
@@ -12,15 +11,11 @@ import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PrivateRoute from '../private-route/private-route';
 import browserHistory from '../../browser-history';
+import {getDataLoadedState} from '../../store/offers/selectors';
 
-function App(props) {
-  const {authorizationStatus, isDataLoaded, offers} = props;
+function App({isDataLoaded}) {
 
-  if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
-    return (
-      <LoadingScreen />
-    );
-  }
+  if (!isDataLoaded) {return <LoadingScreen />;}
 
   return (
     <Router history={browserHistory}>
@@ -39,10 +34,7 @@ function App(props) {
         <PrivateRoute
           exact
           path={AppRoute.FAVORITES}
-          render={() => (
-            <FavoritesScreen
-              offers={offers}
-            />)}
+          render={() => <FavoritesScreen />}
         >
         </PrivateRoute>
         <Route exact path={AppRoute.ROOM}
@@ -63,13 +55,10 @@ function App(props) {
 
 App.propTypes = {
   isDataLoaded: PropTypes.bool.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
-  offers: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isDataLoaded: state.isDataLoaded,
-  authorizationStatus: state.authorizationStatus,
+  isDataLoaded: getDataLoadedState(state),
 });
 
 export {App};
