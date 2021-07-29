@@ -5,21 +5,19 @@ import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {AppRoute} from './const';
-import {reducer} from './store/reducer';
-import reviews from './mocks/reviews';
-import offers from './mocks/offers';
+import rootReducer from './store/root-reducer';
 import App from './components/app/app';
 import {createAPI} from './services/api';
-import {ActionCreator} from './store/action';
+import {redirectToRoute} from './store/action';
 import {checkAuth, fetchHotelsList} from './store/api-actions';
 import {redirect} from './store/middlewares/redirect';
 
 const api = createAPI(
-  () => store.dispatch(ActionCreator.redirectToRoute(AppRoute.LOGIN)),
+  () => store.dispatch(redirectToRoute(AppRoute.LOGIN)),
 );
 
 const store = createStore(
-  reducer,
+  rootReducer,
   composeWithDevTools(
     applyMiddleware(thunk.withExtraArgument(api)),
     applyMiddleware(redirect),
@@ -32,10 +30,7 @@ store.dispatch(fetchHotelsList());
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App
-        reviews={reviews}
-        offers={offers}
-      />
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'));

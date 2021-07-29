@@ -1,34 +1,39 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {Link, useParams, useLocation} from 'react-router-dom';
+import {useParams, useLocation} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {AppRoute, AuthorizationStatus} from '../../const';
-import {generateKey, toUpperFirstLetter} from '../../utils';
+import {APIRoute, AuthorizationStatus} from '../../const';
+import {toUpperFirstLetter} from '../../utils';
 import Comments from '../comments/comments';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
-import {ActionCreator} from '../../store/action';
+import {changeActiveCardId, clearHotelData} from '../../store/action';
 import {fetchHotel, fetchNearbyHotels, fetchComments} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
+import Header from '../header/header';
 import roomScreenProp from './room-screen.prop';
+import {getOffer, getNearbyOffers, getComments} from '../../store/offer-data/selectors';
+import {getAuthorizationStatus} from '../../store/user/selectors';
+import {getActiveCardId} from '../../store/active-card/selectors';
 
 function RoomScreen(props) {
   const {
     nearbyOffers,
-    onActiveCardChange,
-    onBookmarkButtonClick,
-    offer, onHotelSelect,
+    offer,
     authorizationStatus,
-    onHotelClearData,
     comments,
     activeCardId,
+    onActiveCardChange,
+    onBookmarkButtonClick,
+    onHotelClearData,
+    onHotelSelect,
   } = props;
 
   const {id} = useParams();
   const hotelURL = useLocation().pathname;
   const nearbyHotelsURL =  `${hotelURL}/nearby`;
-  const commentsURL = AppRoute.COMMENTS + id;
+  const commentsURL = APIRoute.COMMENTS + id;
 
   useEffect(() => {
     onHotelSelect(hotelURL, nearbyHotelsURL, commentsURL);
@@ -43,10 +48,10 @@ function RoomScreen(props) {
     isFavorite, rating, type,
     bedrooms, maxAdults, price,
     goods, host, description,
-    city: {location},
+    city,
   } = hotel;
 
-  const {latitude, longitude, zoom} = location;
+  const {latitude, longitude, zoom} = city.location;
 
   const cityMap = {
     lat: latitude,
@@ -58,45 +63,17 @@ function RoomScreen(props) {
 
   const threeNearbyOffers = nearbyOffers.slice(0, 3);
   const isNearPlaces = true;
-  const getRoomScreenKey = generateKey();
   const offersMap = [...threeNearbyOffers, {...hotel, isCurrentOffer: true}];
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link" to="main.html">
-                <img className="header__logo" src={'img/logo.svg'} alt="6 cities logo" width="81" height="41"/>
-              </Link>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to="#">
-                    <span className="header__signout">Sign out</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+      <Header props={props} />
       <main className="page__main page__main--property">
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
               {images.map((imageSrc) => (
-                <div className="property__image-wrapper" key={getRoomScreenKey()}>
+                <div className="property__image-wrapper" key={imageSrc}>
                   <img className="property__image" src={imageSrc} alt="Photo studio"/>
                 </div>
               ),
@@ -142,7 +119,7 @@ function RoomScreen(props) {
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
-                  {goods.map((item) => <li className="property__inside-item" key={getRoomScreenKey()}>{item}</li>)}
+                  {goods.map((item) => <li className="property__inside-item" key={item}>{item}</li>)}
                 </ul>
               </div>
               <div className="property__host">
@@ -199,16 +176,16 @@ RoomScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  offer: state.offer,
-  nearbyOffers: state.nearbyOffers,
-  comments: state.comments,
-  authorizationStatus: state.authorizationStatus,
-  activeCardId: state.activeCardId,
+  offer: getOffer(state),
+  nearbyOffers: getNearbyOffers(state),
+  comments: getComments(state),
+  authorizationStatus: getAuthorizationStatus(state),
+  activeCardId: getActiveCardId(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onActiveCardChange(activeCardId) {
-    dispatch(ActionCreator.changeActiveCardId(activeCardId));
+    dispatch(changeActiveCardId(activeCardId));
   },
   onHotelSelect(hotelURL, nearbyHotelURL, commentsURL) {
     dispatch(fetchHotel(hotelURL));
@@ -216,7 +193,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(fetchComments(commentsURL));
   },
   onHotelClearData() {
-    dispatch(ActionCreator.clearHotelData());
+    dispatch(clearHotelData());
   },
 });
 

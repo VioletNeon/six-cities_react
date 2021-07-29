@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import PropTypes from 'prop-types';
 import {SortTypes} from '../../const';
 
-export default function SortOption(props) {
+function SortOption(props) {
   const [open, setOpen] = useState(false);
   const {sortType, onSortTypeChange} = props;
   return (
@@ -34,3 +34,5 @@ SortOption.propTypes = {
   sortType: PropTypes.string.isRequired,
   onSortTypeChange: PropTypes.func.isRequired,
 };
+
+export default memo(SortOption);

@@ -3,7 +3,6 @@ const AppRoute = {
   ROOM: '/hotels/:id',
   FAVORITES: '/favorites',
   MAIN: '/',
-  COMMENTS: '/comments/',
   NOT_FOUND: '/not-found',
 };
 
@@ -35,6 +34,8 @@ const APIRoute = {
   HOTELS: '/hotels',
   LOGIN: '/login',
   LOGOUT: '/logout',
+  COMMENTS: '/comments/',
+  FAVORITE: '/favorite',
 };
 
 export {AppRoute, cities, Cities, SortTypes, AuthorizationStatus, APIRoute};

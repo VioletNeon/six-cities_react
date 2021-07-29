@@ -1,27 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const';
-import {ActionCreator} from '../../store/action';
+import {changeCityOffers, changeSortType, changeActiveCardId} from '../../store/action';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
+import Header from '../header/header';
 import CitiesList from '../cities-list/cities-list';
 import SortOption from '../sort-option/sort-option';
+import {
+  getCities,
+  getCity,
+  getCityOffers,
+  getSortType,
+  getLatitude,
+  getLongitude,
+  getZoom
+} from '../../store/offers/selectors';
 
 function MainScreen(props) {
   const {
     activeCityOffers,
-    onCitySelection,
+    cities,
     activeCity,
     sortType,
-    onSortTypeChange,
-    activeCardId,
+    latitude, longitude, zoom,
     onActiveCardChange,
-    cities,
-    latitude,
-    longitude,
-    zoom,
+    onSortTypeChange,
+    onCitySelection,
     onBookmarkButtonClick,
   } = props;
 
@@ -34,38 +39,16 @@ function MainScreen(props) {
 
   return (
     <div className="page page--gray page--main">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link header__logo-link--active" to="#">
-                <img className="header__logo" src={'img/logo.svg'} alt="6 cities logo" width="81" height="41"/>
-              </Link>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to={AppRoute.LOGIN}>
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to="#">
-                    <span className="header__signout">Sign out</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header props={props} />
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <CitiesList onCitySelection={onCitySelection} activeCity={activeCity} cities={cities}/>
+            <CitiesList
+              onCitySelection={onCitySelection}
+              activeCity={activeCity}
+              cities={cities}
+            />
           </section>
         </div>
         <div className="cities">
@@ -73,7 +56,10 @@ function MainScreen(props) {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{activeCityOffers.length} places to stay in {activeCity}</b>
-              <SortOption sortType={sortType} onSortTypeChange={onSortTypeChange}/>
+              <SortOption
+                sortType={sortType}
+                onSortTypeChange={onSortTypeChange}
+              />
               <OfferCardsList
                 isNearPlaces={isNearPlaces}
                 activeCityOffers={activeCityOffers}
@@ -83,7 +69,10 @@ function MainScreen(props) {
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map city={city} activeCityPoints={activeCityOffers} activeCardId={activeCardId} />
+                <Map
+                  city={city}
+                  activeCityPoints={activeCityOffers}
+                />
               </section>
             </div>
           </div>
@@ -97,7 +86,6 @@ MainScreen.propTypes = {
   activeCityOffers: PropTypes.array.isRequired,
   activeCity: PropTypes.string.isRequired,
   sortType: PropTypes.string.isRequired,
-  activeCardId: PropTypes.number.isRequired,
   onSortTypeChange: PropTypes.func.isRequired,
   onActiveCardChange: PropTypes.func.isRequired,
   onCitySelection: PropTypes.func.isRequired,
@@ -109,25 +97,24 @@ MainScreen.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  activeCity: state.city,
-  activeCityOffers: state.cityOffers,
-  sortType: state.sortType,
-  activeCardId: state.activeCardId,
-  cities: state.cities,
-  latitude: state.latitude,
-  longitude: state.longitude,
-  zoom: state.zoom,
+  activeCity: getCity(state),
+  activeCityOffers: getCityOffers(state),
+  sortType: getSortType(state),
+  cities: getCities(state),
+  latitude: getLatitude(state),
+  longitude: getLongitude(state),
+  zoom: getZoom(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onCitySelection(location, name) {
-    dispatch(ActionCreator.changeCityOffers(location, name));
+    dispatch(changeCityOffers(location, name));
   },
   onSortTypeChange(activeSortType) {
-    dispatch(ActionCreator.changeSortType(activeSortType));
+    dispatch(changeSortType(activeSortType));
   },
   onActiveCardChange(activeCardId) {
-    dispatch(ActionCreator.changeActiveCardId(activeCardId));
+    dispatch(changeActiveCardId(activeCardId));
   },
 });
 
