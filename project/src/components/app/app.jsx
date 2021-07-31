@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Switch, Route, Router} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {AppRoute} from '../../const';
 import MainScreen from '../main-screen/main-screen';
 import FavoritesScreen from '../favorites-screen/favorites-screen';
@@ -11,9 +10,11 @@ import NotFoundScreen from '../not-found-screen/not-found-screen';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PrivateRoute from '../private-route/private-route';
 import browserHistory from '../../browser-history';
-import {getDataLoadedState} from '../../store/offers/selectors';
+import {selectDataLoadedState} from '../../store/offers/selectors';
 
-function App({isDataLoaded}) {
+function App() {
+
+  const isDataLoaded = useSelector(selectDataLoadedState);
 
   if (!isDataLoaded) {return <LoadingScreen />;}
 
@@ -23,7 +24,7 @@ function App({isDataLoaded}) {
         <Route exact path={AppRoute.MAIN}
           render={({history}) => (
             <MainScreen
-              onBookmarkButtonClick={() => history.push(AppRoute.FAVORITES)}
+              onBookmarkButtonClick={() => history.push(AppRoute.LOGIN)}
             />
           )}
         >
@@ -40,7 +41,7 @@ function App({isDataLoaded}) {
         <Route exact path={AppRoute.ROOM}
           render={({history}) => (
             <RoomScreen
-              onBookmarkButtonClick={() => history.push(AppRoute.FAVORITES)}
+              onBookmarkButtonClick={() => history.push(AppRoute.LOGIN)}
             />
           )}
         >
@@ -53,14 +54,4 @@ function App({isDataLoaded}) {
   );
 }
 
-App.propTypes = {
-  isDataLoaded: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  isDataLoaded: getDataLoadedState(state),
-});
-
-export {App};
-export default connect(mapStateToProps, null)(App);
-
+export default App;

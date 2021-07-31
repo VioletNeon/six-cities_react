@@ -1,15 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {logout} from '../../store/api-actions';
-import {getAuthorizationStatus, getAuthInfo} from '../../store/user/selectors';
+import {selectAuthorizationStatus, selectAuthInfo} from '../../store/user/selectors';
 
-function Header(props) {
-  const {authInfo, authorizationStatus, onSignOutClick} = props;
+function Header() {
+  const authorizationStatus = useSelector(selectAuthorizationStatus);
+  const authInfo = useSelector(selectAuthInfo);
+  const dispatch = useDispatch();
+
   const [{email, avatarUrl, name}] = authInfo;
   const isAuthorized = authorizationStatus === AuthorizationStatus.AUTH;
+
+  const onSignOutClick = () => {
+    dispatch(logout());
+  };
 
   return (
     <header className="header">
@@ -39,7 +45,7 @@ function Header(props) {
               </li>
               {isAuthorized && (
                 <li className="header__nav-item">
-                  <Link className="header__nav-link" to="#" onClick={() => onSignOutClick()}>
+                  <Link className="header__nav-link" to="#" onClick={onSignOutClick}>
                     <span className="header__signout">Sign out</span>
                   </Link>
                 </li>
@@ -52,22 +58,4 @@ function Header(props) {
   );
 }
 
-Header.propTypes = {
-  authorizationStatus: PropTypes.string.isRequired,
-  authInfo: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
-  onSignOutClick: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  authorizationStatus: getAuthorizationStatus(state),
-  authInfo: getAuthInfo(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onSignOutClick() {
-    dispatch(logout());
-  },
-});
-
-export {Header};
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import {APIRoute, AuthorizationStatus} from '../../const';
 import offerCardProp from './offer-card.prop';
+import {useSelector, useDispatch} from 'react-redux';
+import {markFavorite} from '../../store/api-actions';
+import {selectAuthorizationStatus} from '../../store/user/selectors';
 
 function CardOffer(props) {
   const {
@@ -22,7 +26,19 @@ function CardOffer(props) {
     id,
   } = offer;
 
+  const authorizationStatus = useSelector(selectAuthorizationStatus);
+  const dispatch = useDispatch();
+
+  const onFavoriteClick = (URL) => {
+    dispatch(markFavorite(URL));
+  };
+
+  const favoriteCardURL = `${APIRoute.FAVORITE}/${id}/${Number(!isFavorite)}`;
+
   const handleCardHover = (evt, cardId = 0) => isNearPlace ? evt.stopPropagation() : onCardHover(cardId);
+  const handleFavoriteCLick = () => {
+    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : onFavoriteClick(favoriteCardURL);
+  };
 
   return (
     <article
@@ -44,7 +60,7 @@ function CardOffer(props) {
           </div>
           <button
             className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`}
-            onClick={() => onBookmarkButtonClick()}
+            onClick={handleFavoriteCLick}
             type="button"
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">

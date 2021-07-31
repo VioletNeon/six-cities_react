@@ -1,5 +1,3 @@
-import {SortTypes} from './const';
-
 const adaptToClient = (dataItem) => {
   const adaptedItem = Object.assign(
     {},
@@ -59,12 +57,6 @@ const adaptAuthInfoToClient = (dataItem) => {
 
 const getCityOffers = (city, citiesOffers) => citiesOffers.filter((offer) => offer.city.name === city);
 
-const sorting = {
-  [SortTypes.PRICE_LOW_TO_HIGH]: (offers) => offers.sort((a, b) => a.price - b.price),
-  [SortTypes.PRICE_HIGH_TO_LOW]: (offers) => offers.sort((a, b) => b.price - a.price),
-  [SortTypes.TOP_RATED_FIRST]: (offers) => offers.sort((a, b) => b.rating - a.rating),
-};
-
 const toUpperFirstLetter = (str) => !str ? str : (str[0].toUpperCase() + str.slice(1));
 
-export {adaptToClient, toUpperFirstLetter, adaptCommentToClient, adaptAuthInfoToClient, getCityOffers, sorting};
+export {adaptToClient, toUpperFirstLetter, adaptCommentToClient, adaptAuthInfoToClient, getCityOffers};

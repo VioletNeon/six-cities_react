@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {useParams, useLocation} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {APIRoute, AuthorizationStatus} from '../../const';
 import {toUpperFirstLetter} from '../../utils';
 import Comments from '../comments/comments';
@@ -9,26 +9,42 @@ import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
 import {changeActiveCardId, clearHotelData} from '../../store/action';
-import {fetchHotel, fetchNearbyHotels, fetchComments} from '../../store/api-actions';
+import {fetchHotel, fetchNearbyHotels, fetchComments, markFavorite} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
 import Header from '../header/header';
-import roomScreenProp from './room-screen.prop';
-import {getOffer, getNearbyOffers, getComments} from '../../store/offer-data/selectors';
-import {getAuthorizationStatus} from '../../store/user/selectors';
-import {getActiveCardId} from '../../store/active-card/selectors';
+import {selectOffer, selectNearbyOffers, selectComments} from '../../store/offer-data/selectors';
+import {selectAuthorizationStatus} from '../../store/user/selectors';
+import {selectActiveCardId} from '../../store/active-card/selectors';
 
 function RoomScreen(props) {
   const {
-    nearbyOffers,
-    offer,
-    authorizationStatus,
-    comments,
-    activeCardId,
-    onActiveCardChange,
     onBookmarkButtonClick,
-    onHotelClearData,
-    onHotelSelect,
   } = props;
+
+  const offer = useSelector(selectOffer);
+  const nearbyOffers = useSelector(selectNearbyOffers);
+  const comments = useSelector(selectComments);
+  const authorizationStatus = useSelector(selectAuthorizationStatus);
+  const activeCardId = useSelector(selectActiveCardId);
+  const dispatch = useDispatch();
+
+  const onActiveCardChange = (cardId) => {
+    dispatch(changeActiveCardId(cardId));
+  };
+
+  const onHotelSelect = (urlHotel, urlNearbyHotel, urlComments) => {
+    dispatch(fetchHotel(urlHotel));
+    dispatch(fetchNearbyHotels(urlNearbyHotel));
+    dispatch(fetchComments(urlComments));
+  };
+
+  const onHotelClearData = () => {
+    dispatch(clearHotelData());
+  };
+
+  const onFavoriteClick = (URL) => {
+    dispatch(markFavorite(URL));
+  };
 
   const {id} = useParams();
   const hotelURL = useLocation().pathname;
@@ -59,6 +75,12 @@ function RoomScreen(props) {
     zoom: zoom,
   };
 
+  const favoriteCardURL = `${APIRoute.FAVORITE}/${id}/${Number(!isFavorite)}`;
+
+  const handleFavoriteCLick = () => {
+    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : onFavoriteClick(favoriteCardURL);
+  };
+
   const {avatarUrl, isPro, name} = host;
 
   const threeNearbyOffers = nearbyOffers.slice(0, 3);
@@ -85,7 +107,11 @@ function RoomScreen(props) {
               {isPremium && <div className="property__mark"><span>Premium</span></div>}
               <div className="property__name-wrapper">
                 <h1 className="property__name">{title}</h1>
-                <button className={`property__bookmark-button button ${isFavorite && 'property__bookmark-button--active'}`} type="button">
+                <button
+                  className={`property__bookmark-button button ${isFavorite && 'property__bookmark-button--active'}`}
+                  type="button"
+                  onClick={handleFavoriteCLick}
+                >
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark">
                     </use>
@@ -164,38 +190,7 @@ function RoomScreen(props) {
 }
 
 RoomScreen.propTypes = {
-  offer: roomScreenProp,
-  comments: PropTypes.array.isRequired,
-  nearbyOffers: PropTypes.array.isRequired,
-  onActiveCardChange: PropTypes.func.isRequired,
   onBookmarkButtonClick: PropTypes.func.isRequired,
-  onHotelSelect: PropTypes.func.isRequired,
-  authorizationStatus: PropTypes.string.isRequired,
-  onHotelClearData: PropTypes.func.isRequired,
-  activeCardId: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  offer: getOffer(state),
-  nearbyOffers: getNearbyOffers(state),
-  comments: getComments(state),
-  authorizationStatus: getAuthorizationStatus(state),
-  activeCardId: getActiveCardId(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onActiveCardChange(activeCardId) {
-    dispatch(changeActiveCardId(activeCardId));
-  },
-  onHotelSelect(hotelURL, nearbyHotelURL, commentsURL) {
-    dispatch(fetchHotel(hotelURL));
-    dispatch(fetchNearbyHotels(nearbyHotelURL));
-    dispatch(fetchComments(commentsURL));
-  },
-  onHotelClearData() {
-    dispatch(clearHotelData());
-  },
-});
-
-export {RoomScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(RoomScreen);
+export default RoomScreen;
