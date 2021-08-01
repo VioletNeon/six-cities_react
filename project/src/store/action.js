@@ -14,6 +14,9 @@ const ActionType = {
   CLEAR_HOTEL_DATA: 'clearHotelData',
   CLEAR_AUTH_INFO: 'clearAuthInfo',
   CLEAR_FAVORITES_DATA: 'clearFavoritesData',
+  UPDATE_HOTELS: 'updateHotels',
+  UPDATE_HOTEL: 'updateHotel',
+  UPDATE_FAVORITES_LIST: 'updateFavoritesList',
 };
 
 const changeCityOffers = ({latitude, longitude, zoom}, name) => ({
@@ -78,6 +81,16 @@ const loadFavoriteHotels = (favoriteOffers) => ({
   favoriteOffers,
 });
 
+const updateOffers = (updatedOffer) => ({
+  type: ActionType.UPDATE_HOTELS,
+  updatedOffer,
+});
+
+const updateOffer = (updatedOffer) => ({
+  type: ActionType.UPDATE_HOTEL,
+  offer: [updatedOffer],
+});
+
 const clearHotelData = () => ({
   type: ActionType.CLEAR_HOTEL_DATA,
 });
@@ -101,5 +114,7 @@ export {
   loadAuthInfo,
   loadFavoriteHotels,
   clearHotelData,
-  clearFavoritesData
+  clearFavoritesData,
+  updateOffers,
+  updateOffer
 };

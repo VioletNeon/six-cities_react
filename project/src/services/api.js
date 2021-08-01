@@ -24,6 +24,11 @@ const createAPI = (onBadRequested) => {
 
   const onSuccess = (response) => response;
 
+  const setToken = (config) => {
+    config.headers['x-token'] = localStorage.getItem('token') ?? '';
+    return config;
+  };
+
   const onFail = (err) => {
     if (err.response.status === HttpCode.BAD_REQUEST) {
       onBadRequested();
@@ -32,6 +37,8 @@ const createAPI = (onBadRequested) => {
     }
     throw err;
   };
+
+  api.interceptors.request.use(setToken);
   api.interceptors.response.use(onSuccess, onFail);
 
   return api;

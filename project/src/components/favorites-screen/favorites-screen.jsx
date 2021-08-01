@@ -1,16 +1,26 @@
 import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import FavoriteCity from '../favorite-city/favorite-city';
 import Header from '../header/header';
 import {clearFavoritesData} from '../../store/action';
 import {fetchFavoriteHotels} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
-import {getFavoriteOffers, getFavoritesLoadState} from '../../store/user/selectors';
+import {selectFavoriteOffers, selectFavoritesLoadState} from '../../store/user/selectors';
 
 function FavoritesScreen(props) {
-  const {onFavoriteSelect, onFavoritesOut, favoriteOffers, isFavoritesLoad} = props;
+  const dispatch = useDispatch();
+
+  const favoriteOffers = useSelector(selectFavoriteOffers);
+  const isFavoritesLoad = useSelector(selectFavoritesLoadState);
+
+  const onFavoriteSelect = () => {
+    dispatch(fetchFavoriteHotels());
+  };
+
+  const onFavoritesOut = () => {
+    dispatch(clearFavoritesData());
+  };
 
   useEffect(() => {
     onFavoriteSelect();
@@ -35,7 +45,7 @@ function FavoritesScreen(props) {
 
   const showFavoritesPart = () => {
     if (!isFavoritesEmpty) {
-      const favoriteCityOffers = getFavoriteCityOffers();
+      const favoriteCityOffers = getFavoriteCityOffers(favoriteOffers);
       return (
         <ul className="favorites__list">
           {favoriteCityOffers.map(([city, hotels]) => <FavoriteCity city={city} favoriteOffers={hotels} key={city}/>)}
@@ -70,30 +80,4 @@ function FavoritesScreen(props) {
   );
 }
 
-FavoritesScreen.propTypes = {
-  favoriteOffers: PropTypes.arrayOf(PropTypes.shape({
-    city: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired).isRequired,
-  onFavoriteSelect: PropTypes.func.isRequired,
-  onFavoritesOut: PropTypes.func.isRequired,
-  isFavoritesLoad: PropTypes.bool.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  favoriteOffers: getFavoriteOffers(state),
-  isFavoritesLoad: getFavoritesLoadState(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onFavoriteSelect() {
-    dispatch(fetchFavoriteHotels());
-  },
-  onFavoritesOut() {
-    dispatch(clearFavoritesData());
-  },
-});
-
-export {FavoritesScreen};
-export default connect(mapStateToProps, mapDispatchToProps)(FavoritesScreen);
+export default FavoritesScreen;

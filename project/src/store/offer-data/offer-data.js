@@ -23,6 +23,11 @@ const offerData = (state = initialState, action) => {
         ...state,
         comments: action.comments,
       };
+    case ActionType.UPDATE_HOTEL:
+      return {
+        ...state,
+        offer: action.offer,
+      };
     case ActionType.CLEAR_HOTEL_DATA:
       return {
         ...state,

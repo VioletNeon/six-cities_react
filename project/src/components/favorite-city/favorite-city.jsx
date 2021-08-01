@@ -5,7 +5,6 @@ import FavoriteCard from '../favorite-card/favorite-card';
 
 function FavoriteCity(props) {
   const {city, favoriteOffers} = props;
-
   return (
     <li className="favorites__locations-items">
       <div className="favorites__locations locations locations--current">
