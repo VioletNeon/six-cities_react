@@ -75,4 +75,4 @@ const offers = (state = initialState, action) => {
   }
 };
 
-export {offers};
+export {offers, DEFAULT_CITY};
