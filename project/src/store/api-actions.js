@@ -78,13 +78,11 @@ const fetchFavoriteHotels = () => (dispatch, _getState, api) => (
     .then(({data}) => dispatch(loadFavoriteHotels(data.map((dataItem) => adaptToClient(dataItem)))))
 );
 
-const markFavorite = (URL) => (dispatch, _getState, api) => {
-  api.post(URL)
-    .then(({data}) => {
-      dispatch(updateOffers(adaptToClient(data)));
-      dispatch(updateOffer(adaptToClient(data)));
-    });
-};
+const markFavorite = (URL) => (dispatch, _getState, api) => api.post(URL)
+  .then(({data}) => {
+    dispatch(updateOffers(adaptToClient(data)));
+    dispatch(updateOffer(adaptToClient(data)));
+  });
 
 export {
   fetchHotelsList,

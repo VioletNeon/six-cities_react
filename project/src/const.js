@@ -3,7 +3,7 @@ const AppRoute = {
   ROOM: '/hotels/:id',
   FAVORITES: '/favorites',
   MAIN: '/',
-  NOT_FOUND: '/not-found',
+  BAD_REQUEST: '/not-found',
 };
 
 const Cities = {

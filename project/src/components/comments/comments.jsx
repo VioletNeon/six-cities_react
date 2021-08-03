@@ -9,35 +9,34 @@ function Comments({commentID}) {
   const [review, setReview] = useState('');
   const dispatch = useDispatch();
 
-  const commentURL = APIRoute.COMMENTS + commentID;
+  const MIN_TEXT_LENGTH = 50;
+  const MAX_TEXT_LENGTH = 300;
 
-  const onSubmit = (URL, commentData) => {
-    dispatch(toComment(URL, commentData));
-  };
+  const commentUrl = APIRoute.COMMENTS + commentID;
 
-  const buttonSubmitHandler = (evt) => {
+  const handleButtonSubmit = (evt) => {
     evt.preventDefault();
 
-    onSubmit(commentURL, {
+    dispatch(toComment(commentUrl, {
       comment: review,
       rating: rating,
-    });
+    }));
 
     setReview('');
   };
 
-  const ratingChangeHandler = (evt) => {
+  const handleRatingChange = (evt) => {
     setRating(evt.target.value);
   };
 
-  const reviewChangeHandler = (evt) => {
+  const handleReviewChange = (evt) => {
     setReview(evt.target.value);
   };
 
   return (
-    <form className="reviews__form form" action="#" method="post" onSubmit={buttonSubmitHandler}>
+    <form className="reviews__form form" action="#" method="post" onSubmit={handleButtonSubmit}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
-      <div className="reviews__rating-form form__rating" onChange={ratingChangeHandler}>
+      <div className="reviews__rating-form form__rating" onChange={handleRatingChange}>
         <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio"/>
         <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
           <svg className="form__star-image" width="37" height="33">
@@ -71,12 +70,12 @@ function Comments({commentID}) {
       </div>
       <textarea
         className="reviews__textarea form__textarea"
-        minLength={50}
-        maxLength={300}
+        minLength={MIN_TEXT_LENGTH}
+        maxLength={MAX_TEXT_LENGTH}
         value={review}
         id="review"
         name="review"
-        onChange={reviewChangeHandler}
+        onChange={handleReviewChange}
         placeholder="Tell how was your stay, what you like and what can be improved"
       >
       </textarea>
@@ -88,7 +87,7 @@ function Comments({commentID}) {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!(rating > 0 && review.length > 50)}
+          disabled={!(rating > 0 && review.length > MIN_TEXT_LENGTH)}
         >Submit
         </button>
       </div>

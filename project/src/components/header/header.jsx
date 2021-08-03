@@ -13,7 +13,7 @@ function Header() {
   const [{email, avatarUrl, name}] = authInfo;
   const isAuthorized = authorizationStatus === AuthorizationStatus.AUTH;
 
-  const onSignOutClick = () => {
+  const handleSignOutClick = () => {
     dispatch(logout());
   };
 
@@ -45,7 +45,7 @@ function Header() {
               </li>
               {isAuthorized && (
                 <li className="header__nav-item">
-                  <Link className="header__nav-link" to="#" onClick={onSignOutClick}>
+                  <Link className="header__nav-link" to="#" onClick={handleSignOutClick}>
                     <span className="header__signout">Sign out</span>
                   </Link>
                 </li>

@@ -13,7 +13,7 @@ import {checkAuth, fetchHotelsList} from './store/api-actions';
 import {redirect} from './store/middlewares/redirect';
 
 const api = createAPI(
-  () => store.dispatch(redirectToRoute(AppRoute.LOGIN)),
+  () => store.dispatch(redirectToRoute(AppRoute.BAD_REQUEST)),
 );
 
 const store = createStore(

@@ -7,6 +7,7 @@ import FavoritesScreen from '../favorites-screen/favorites-screen';
 import RoomScreen from '../room-screen/room-screen';
 import SignInScreen from '../sign-in-screen/sign-in-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
+import BadRequested from '../bad-requested/bad-requested';
 import LoadingScreen from '../loading-screen/loading-screen';
 import PrivateRoute from '../private-route/private-route';
 import browserHistory from '../../browser-history';
@@ -46,7 +47,10 @@ function App() {
           )}
         >
         </Route>
-        <Route path={AppRoute.NOT_FOUND} >
+        <Route exact path={AppRoute.BAD_REQUEST}>
+          <BadRequested />
+        </Route>
+        <Route >
           <NotFoundScreen />
         </Route>
       </Switch>

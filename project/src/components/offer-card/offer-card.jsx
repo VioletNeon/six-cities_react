@@ -7,7 +7,9 @@ import {useSelector, useDispatch} from 'react-redux';
 import {markFavorite} from '../../store/api-actions';
 import {selectAuthorizationStatus} from '../../store/user/selectors';
 
-function CardOffer(props) {
+const STAR_RATING_PART = 20;
+
+function OfferCard(props) {
   const {
     offer,
     onCardHover,
@@ -29,15 +31,11 @@ function CardOffer(props) {
   const authorizationStatus = useSelector(selectAuthorizationStatus);
   const dispatch = useDispatch();
 
-  const onFavoriteClick = (URL) => {
-    dispatch(markFavorite(URL));
-  };
-
   const favoriteCardURL = `${APIRoute.FAVORITE}/${id}/${Number(!isFavorite)}`;
 
   const handleCardHover = (evt, cardId = 0) => isNearPlace ? evt.stopPropagation() : onCardHover(cardId);
-  const handleFavoriteCLick = () => {
-    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : onFavoriteClick(favoriteCardURL);
+  const handleFavoriteClick = () => {
+    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : dispatch(markFavorite(favoriteCardURL));
   };
 
   return (
@@ -49,7 +47,7 @@ function CardOffer(props) {
       {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
       <div className={`${isNearPlace ? 'near-places__image-wrapper' : 'cities__image-wrapper'} place-card__image-wrapper`}>
         <Link to={`/hotels/${id}`}>
-          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"/>
+          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place card"/>
         </Link>
       </div>
       <div className="place-card__info">
@@ -60,7 +58,7 @@ function CardOffer(props) {
           </div>
           <button
             className={`place-card__bookmark-button button ${isFavorite && 'place-card__bookmark-button--active'}`}
-            onClick={handleFavoriteCLick}
+            onClick={handleFavoriteClick}
             type="button"
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -71,7 +69,7 @@ function CardOffer(props) {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${Math.round(rating)*20}%`}}>
+            <span style={{width: `${Math.round(rating)*STAR_RATING_PART}%`}}>
             </span>
             <span className="visually-hidden">Rating</span>
           </div>
@@ -85,11 +83,11 @@ function CardOffer(props) {
   );
 }
 
-CardOffer.propTypes = {
+OfferCard.propTypes = {
   offer: offerCardProp,
   onCardHover: PropTypes.func.isRequired,
   isNearPlace: PropTypes.bool.isRequired,
   onBookmarkButtonClick: PropTypes.func.isRequired,
 };
 
-export default CardOffer;
+export default OfferCard;

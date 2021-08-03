@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import favoriteCardProp from './favorite-card.prop';
 
+const STAR_RATING_PART = 20;
+
 function FavoriteCard(props) {
   const {offer} = props;
   const {
@@ -17,7 +19,7 @@ function FavoriteCard(props) {
     <article className="favorites__card place-card">
       <div className="favorites__image-wrapper place-card__image-wrapper">
         <Link to={`/hotels/${id}`}>
-          <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place image"/>
+          <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place card"/>
         </Link>
       </div>
       <div className="favorites__card-info place-card__info">
@@ -38,7 +40,7 @@ function FavoriteCard(props) {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${Math.round(rating)*20}%`}}>
+            <span style={{width: `${Math.round(rating)*STAR_RATING_PART}%`}}>
             </span>
             <span className="visually-hidden">Rating</span>
           </div>
