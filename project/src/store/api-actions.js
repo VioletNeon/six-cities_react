@@ -10,7 +10,8 @@ import {
   loadAuthInfo,
   loadFavoriteHotels,
   updateOffers,
-  updateOffer
+  updateOffer,
+  updateNearbyOffer
 } from './action';
 
 const fetchHotelsList = () => (dispatch, _getState, api) => (
@@ -78,9 +79,14 @@ const fetchFavoriteHotels = () => (dispatch, _getState, api) => (
     .then(({data}) => dispatch(loadFavoriteHotels(data.map((dataItem) => adaptToClient(dataItem)))))
 );
 
-const markFavorite = (URL) => (dispatch, _getState, api) => api.post(URL)
+const markFavoriteInList = (URL) => (dispatch, _getState, api) => api.post(URL)
   .then(({data}) => {
     dispatch(updateOffers(adaptToClient(data)));
+    dispatch(updateNearbyOffer(adaptToClient(data)));
+  });
+
+const markFavoriteInCard = (URL) => (dispatch, _getState, api) => api.post(URL)
+  .then(({data}) => {
     dispatch(updateOffer(adaptToClient(data)));
   });
 
@@ -94,5 +100,6 @@ export {
   fetchComments,
   fetchFavoriteHotels,
   toComment,
-  markFavorite
+  markFavoriteInList,
+  markFavoriteInCard
 };

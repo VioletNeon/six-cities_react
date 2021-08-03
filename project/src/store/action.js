@@ -17,6 +17,7 @@ const ActionType = {
   UPDATE_HOTELS: 'updateHotels',
   UPDATE_HOTEL: 'updateHotel',
   UPDATE_FAVORITES_LIST: 'updateFavoritesList',
+  UPDATE_NEARBY_HOTEL: 'updateNearbyHotel',
 };
 
 const changeCityOffers = ({latitude, longitude, zoom}, name) => ({
@@ -91,6 +92,11 @@ const updateOffer = (updatedOffer) => ({
   offer: [updatedOffer],
 });
 
+const updateNearbyOffer = (updatedOffer) => ({
+  type: ActionType.UPDATE_NEARBY_HOTEL,
+  updatedOffer,
+});
+
 const clearHotelData = () => ({
   type: ActionType.CLEAR_HOTEL_DATA,
 });
@@ -116,5 +122,6 @@ export {
   clearHotelData,
   clearFavoritesData,
   updateOffers,
-  updateOffer
+  updateOffer,
+  updateNearbyOffer
 };

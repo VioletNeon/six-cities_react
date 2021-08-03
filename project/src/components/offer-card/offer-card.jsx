@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import {APIRoute, AuthorizationStatus} from '../../const';
 import offerCardProp from './offer-card.prop';
 import {useSelector, useDispatch} from 'react-redux';
-import {markFavorite} from '../../store/api-actions';
+import {markFavoriteInList} from '../../store/api-actions';
 import {selectAuthorizationStatus} from '../../store/user/selectors';
 
 const STAR_RATING_PART = 20;
@@ -35,7 +35,7 @@ function OfferCard(props) {
 
   const handleCardHover = (evt, cardId = 0) => isNearPlace ? evt.stopPropagation() : onCardHover(cardId);
   const handleFavoriteClick = () => {
-    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : dispatch(markFavorite(favoriteCardURL));
+    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : dispatch(markFavoriteInList(favoriteCardURL));
   };
 
   return (

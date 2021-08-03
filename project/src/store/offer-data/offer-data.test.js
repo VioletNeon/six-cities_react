@@ -4,7 +4,8 @@ import {
   loadNearbyHotels,
   loadComments,
   clearHotelData,
-  updateOffer
+  updateOffer,
+  updateNearbyOffer
 } from '../action';
 
 const initialExpectedState = {
@@ -86,6 +87,23 @@ describe('Reducer: offer-data', () => {
     };
 
     expect(offerData(initialExpectedState, updateOffer(updatedOffer))).toEqual(expectedState);
+  });
+
+  it('should update nearby hotel offer by a given data', () => {
+    const expectedState = {
+      ...initialExpectedState,
+      nearbyOffers: [{
+        description: 'correct-description',
+        city: 'correct-city',
+      }],
+    };
+
+    const updatedOffer = {
+      description: 'correct-description',
+      city: 'correct-city',
+    };
+
+    expect(offerData(initialExpectedState, updateNearbyOffer(updatedOffer))).toEqual(expectedState);
   });
 
   it('should clear hotel offer data', () => {
