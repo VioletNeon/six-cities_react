@@ -1,7 +1,18 @@
 import MockAdapter from 'axios-mock-adapter';
 import {createAPI} from '../services/api';
 import {ActionType} from './action';
-import {checkAuth, login, fetchHotelsList, fetchHotel, fetchNearbyHotels, fetchComments, toComment, fetchFavoriteHotels, markFavorite} from './api-actions';
+import {
+  checkAuth,
+  login,
+  fetchHotelsList,
+  fetchHotel,
+  fetchNearbyHotels,
+  fetchComments,
+  toComment,
+  fetchFavoriteHotels,
+  markFavoriteInCard,
+  markFavoriteInList
+} from './api-actions';
 import {APIRoute, AppRoute, AuthorizationStatus} from '../const';
 
 let api = null;
@@ -303,11 +314,11 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to POST /favorite/id/status', () => {
+  it('should make a correct API call to POST /favorite/id/status for update offers list', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
     const FAKE_URL = '/favorite/0/1';
-    const offerLoader = markFavorite(FAKE_URL);
+    const offerLoader = markFavoriteInList(FAKE_URL);
 
     apiMock
       .onPost(FAKE_URL)
@@ -323,6 +334,27 @@ describe('Async operations', () => {
         });
 
         expect(dispatch).toHaveBeenNthCalledWith(2, {
+          type: ActionType.UPDATE_NEARBY_HOTEL,
+          updatedOffer: adaptedHotelData,
+        });
+      });
+  });
+
+  it('should make a correct API call to POST /favorite/id/status for update offer card', () => {
+    const apiMock = new MockAdapter(api);
+    const dispatch = jest.fn();
+    const FAKE_URL = '/favorite/0/1';
+    const offerLoader = markFavoriteInCard(FAKE_URL);
+
+    apiMock
+      .onPost(FAKE_URL)
+      .reply(200, defaultHotelData);
+
+    return offerLoader(dispatch, () => {}, api)
+      .then(() => {
+        expect(dispatch).toHaveBeenCalledTimes(1);
+
+        expect(dispatch).toHaveBeenNthCalledWith(1, {
           type: ActionType.UPDATE_HOTEL,
           offer: [adaptedHotelData],
         });

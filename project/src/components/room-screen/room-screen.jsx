@@ -9,7 +9,7 @@ import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
 import OfferCardsList from '../offer-cards-list/offer-cards-list';
 import {changeActiveCardId, clearHotelData} from '../../store/action';
-import {fetchHotel, fetchNearbyHotels, fetchComments, markFavorite} from '../../store/api-actions';
+import {fetchHotel, fetchNearbyHotels, fetchComments, markFavoriteInCard} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
 import Header from '../header/header';
 import {selectOffer, selectNearbyOffers, selectComments} from '../../store/offer-data/selectors';
@@ -67,7 +67,7 @@ function RoomScreen(props) {
   const favoriteCardURL = `${APIRoute.FAVORITE}/${id}/${Number(!isFavorite)}`;
 
   const handleFavoriteCLick = () => {
-    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : dispatch(markFavorite(favoriteCardURL));
+    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : dispatch(markFavoriteInCard(favoriteCardURL));
   };
 
   const {avatarUrl, isPro, name} = host;

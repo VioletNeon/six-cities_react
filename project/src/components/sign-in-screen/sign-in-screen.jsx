@@ -12,6 +12,7 @@ function SignInScreen() {
 
   const handleFormSubmit = (evt) => {
     evt.preventDefault();
+
     if (loginRef.current.value.length && passwordRef.current.value.length) {
       dispatch(login({
         login: loginRef.current.value,
@@ -71,6 +72,7 @@ function SignInScreen() {
                   placeholder="Password"
                   required=""
                   data-testid="password"
+                  pattern={'^[-a-zA-Z0-9@\\.+_]+$'}
                 />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>

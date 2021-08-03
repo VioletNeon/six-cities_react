@@ -15,6 +15,7 @@ import {
   redirectToRoute,
   clearHotelData,
   clearFavoritesData,
+  updateNearbyOffer,
   ActionType
 } from './action';
 
@@ -226,6 +227,23 @@ describe('Actions', () => {
     const PAYLOAD = 'correct-url';
 
     expect(redirectToRoute(PAYLOAD)).toEqual(expectedAction);
+  });
+
+  it('action creator for updating nearby hotel offer returns correct action', () => {
+    const expectedAction = {
+      type: ActionType.UPDATE_NEARBY_HOTEL,
+      updatedOffer: {
+        description: '',
+        city: '',
+      },
+    };
+
+    const updatedOffer = {
+      description: '',
+      city: '',
+    };
+
+    expect(updateNearbyOffer(updatedOffer)).toEqual(expectedAction);
   });
 
   it('action creator for clearing hotels offers data list return correct action', () => {

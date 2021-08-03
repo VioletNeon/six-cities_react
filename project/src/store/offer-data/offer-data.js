@@ -6,6 +6,11 @@ const initialState = {
   comments: [],
 };
 
+const updatedOffers = (stateOffers, updatedOffer) => {
+  const updatedOfferIndex = stateOffers.findIndex((offer) => offer.id === updatedOffer.id);
+  return [...stateOffers.slice(0, updatedOfferIndex), updatedOffer, ...stateOffers.slice(updatedOfferIndex + 1)];
+};
+
 const offerData = (state = initialState, action) => {
   switch (action.type) {
     case ActionType.LOAD_HOTEL:
@@ -27,6 +32,11 @@ const offerData = (state = initialState, action) => {
       return {
         ...state,
         offer: action.offer,
+      };
+    case ActionType.UPDATE_NEARBY_HOTEL:
+      return {
+        ...state,
+        nearbyOffers: updatedOffers(state.nearbyOffers, action.updatedOffer),
       };
     case ActionType.CLEAR_HOTEL_DATA:
       return {
