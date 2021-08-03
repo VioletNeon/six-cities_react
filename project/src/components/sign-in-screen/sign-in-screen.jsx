@@ -10,17 +10,13 @@ function SignInScreen() {
   const dispatch = useDispatch();
   const activeCity = useSelector(selectCity);
 
-  const onSubmit = (authData) => {
-    dispatch(login(authData));
-  };
-
-  const handleSubmit = (evt) => {
+  const handleFormSubmit = (evt) => {
     evt.preventDefault();
     if (loginRef.current.value.length && passwordRef.current.value.length) {
-      onSubmit({
+      dispatch(login({
         login: loginRef.current.value,
         password: passwordRef.current.value,
-      });
+      }));
     }
   };
 
@@ -52,7 +48,7 @@ function SignInScreen() {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post" onSubmit={handleSubmit}>
+            <form className="login__form form" action="#" method="post" onSubmit={handleFormSubmit}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
                 <input
@@ -62,6 +58,7 @@ function SignInScreen() {
                   name="email"
                   placeholder="Email"
                   required=""
+                  data-testid="login"
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -73,6 +70,7 @@ function SignInScreen() {
                   name="password"
                   placeholder="Password"
                   required=""
+                  data-testid="password"
                 />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>

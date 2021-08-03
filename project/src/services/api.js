@@ -1,6 +1,4 @@
 import axios from 'axios';
-import browserHistory from '../browser-history';
-import {AppRoute} from '../const';
 
 const BASE_URL = 'https://7.react.pages.academy/six-cities';
 const REQUEST_TIMEOUT = 5000;
@@ -32,8 +30,6 @@ const createAPI = (onBadRequested) => {
   const onFail = (err) => {
     if (err.response.status === HttpCode.BAD_REQUEST) {
       onBadRequested();
-    } else if (err.status === HttpCode.NOT_FOUND) {
-      browserHistory.push(AppRoute.NOT_FOUND);
     }
     throw err;
   };

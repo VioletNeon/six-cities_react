@@ -35,13 +35,13 @@ describe('Reducer: offers', () => {
           name: DEFAULT_CITY.name,
         },
       }],
-      cities: [{name: DEFAULT_CITY.name,}],
+      cities: [{name: DEFAULT_CITY.name}],
     };
 
     const hotels = [{
-        city: {
-          name: DEFAULT_CITY.name,
-        },
+      city: {
+        name: DEFAULT_CITY.name,
+      },
     }];
 
     expect(offers(initialExpectedState, loadHotels(hotels))).toEqual(expectedState);
@@ -110,7 +110,7 @@ describe('Reducer: offers', () => {
           name: DEFAULT_CITY.name,
         },
       }],
-    }
+    };
 
     const trialState = {
       ...initialExpectedState,
@@ -127,7 +127,7 @@ describe('Reducer: offers', () => {
       latitude: DEFAULT_CITY.latitude,
       longitude: DEFAULT_CITY.longitude,
       zoom: DEFAULT_CITY.zoom,
-    }
+    };
 
     expect(offers(trialState, changeCityOffers(location, city))).toEqual(expectedState);
   });
@@ -136,25 +136,25 @@ describe('Reducer: offers', () => {
     const expectedState = {
       ...initialExpectedState,
       offers: [
-        {city: {name: DEFAULT_CITY.name,}, id: 1,},
-        {city: {name: DEFAULT_CITY.name,}, id: 2,},
-        {city: {name: 'cityTwo',}, id: 3,}],
+        {city: {name: DEFAULT_CITY.name}, id: 1},
+        {city: {name: DEFAULT_CITY.name}, id: 2},
+        {city: {name: 'cityTwo'}, id: 3}],
       cityOffers: [
-        {city: {name: DEFAULT_CITY.name,}, id: 1,},
-        {city: {name: DEFAULT_CITY.name,}, id: 2,},
+        {city: {name: DEFAULT_CITY.name}, id: 1},
+        {city: {name: DEFAULT_CITY.name}, id: 2},
       ],
     };
 
     const trialState = {
       ...initialExpectedState,
       offers: [
-        {city: {name: DEFAULT_CITY.name,}, id: 1,},
-        {city: {name: 'cityOne',}, id: 2,},
-        {city: {name: 'cityTwo',}, id: 3,}
+        {city: {name: DEFAULT_CITY.name}, id: 1},
+        {city: {name: 'cityOne'}, id: 2},
+        {city: {name: 'cityTwo'}, id: 3},
       ],
     };
 
-    const updatedOffer = {city: {name: DEFAULT_CITY.name,}, id: 2,};
+    const updatedOffer = {city: {name: DEFAULT_CITY.name}, id: 2};
 
     expect(offers(trialState, updateOffers(updatedOffer))).toEqual(expectedState);
   });

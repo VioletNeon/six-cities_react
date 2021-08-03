@@ -5,7 +5,7 @@ import {
   loadAuthInfo,
   loadFavoriteHotels,
   requireAuthorization,
-  signOut,
+  signOut
 } from '../action';
 
 const initialExpectedState = {

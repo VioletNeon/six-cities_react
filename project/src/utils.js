@@ -57,6 +57,6 @@ const adaptAuthInfoToClient = (dataItem) => {
 
 const getCityOffers = (city, citiesOffers) => citiesOffers.filter((offer) => offer.city.name === city);
 
-const toUpperFirstLetter = (str) => !str ? str : (str[0].toUpperCase() + str.slice(1));
+const capitalizeFirstLetter = (str) => !str ? str : (str[0].toUpperCase() + str.slice(1));
 
-export {adaptToClient, toUpperFirstLetter, adaptCommentToClient, adaptAuthInfoToClient, getCityOffers};
+export {adaptToClient, capitalizeFirstLetter, adaptCommentToClient, adaptAuthInfoToClient, getCityOffers};

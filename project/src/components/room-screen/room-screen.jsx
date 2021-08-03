@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useParams, useLocation} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {APIRoute, AuthorizationStatus} from '../../const';
-import {toUpperFirstLetter} from '../../utils';
+import {capitalizeFirstLetter} from '../../utils';
 import Comments from '../comments/comments';
 import ReviewsList from '../reviews-list/reviews-list';
 import Map from '../map/map';
@@ -16,13 +16,14 @@ import {selectOffer, selectNearbyOffers, selectComments} from '../../store/offer
 import {selectAuthorizationStatus} from '../../store/user/selectors';
 import {selectActiveCardId} from '../../store/active-card/selectors';
 
+const MAX_NEARBY_OFFERS = 3;
+const STAR_RATING_PART = 20;
+
 function RoomScreen(props) {
-  const {
-    onBookmarkButtonClick,
-  } = props;
+  const {onBookmarkButtonClick} = props;
 
   const offer = useSelector(selectOffer);
-  const nearbyOffers = useSelector(selectNearbyOffers);
+  const nearbyOffers = useSelector(selectNearbyOffers).slice(0, MAX_NEARBY_OFFERS);
   const comments = useSelector(selectComments);
   const authorizationStatus = useSelector(selectAuthorizationStatus);
   const activeCardId = useSelector(selectActiveCardId);
@@ -32,29 +33,17 @@ function RoomScreen(props) {
     dispatch(changeActiveCardId(cardId));
   };
 
-  const onHotelSelect = (urlHotel, urlNearbyHotel, urlComments) => {
-    dispatch(fetchHotel(urlHotel));
-    dispatch(fetchNearbyHotels(urlNearbyHotel));
-    dispatch(fetchComments(urlComments));
-  };
-
-  const onHotelClearData = () => {
-    dispatch(clearHotelData());
-  };
-
-  const onFavoriteClick = (URL) => {
-    dispatch(markFavorite(URL));
-  };
-
   const {id} = useParams();
-  const hotelURL = useLocation().pathname;
-  const nearbyHotelsURL =  `${hotelURL}/nearby`;
-  const commentsURL = APIRoute.COMMENTS + id;
+  const hotelUrl = useLocation().pathname;
 
   useEffect(() => {
-    onHotelSelect(hotelURL, nearbyHotelsURL, commentsURL);
-    return onHotelClearData;
-  }, [id]);
+    dispatch(fetchHotel(hotelUrl));
+    dispatch(fetchNearbyHotels(`${hotelUrl}/nearby`));
+    dispatch(fetchComments(APIRoute.COMMENTS + id));
+    return () => {
+      dispatch(clearHotelData());
+    };
+  }, [dispatch, id, hotelUrl]);
 
   const [hotel] = offer;
   if (!hotel) { return <LoadingScreen />; }
@@ -78,14 +67,12 @@ function RoomScreen(props) {
   const favoriteCardURL = `${APIRoute.FAVORITE}/${id}/${Number(!isFavorite)}`;
 
   const handleFavoriteCLick = () => {
-    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : onFavoriteClick(favoriteCardURL);
+    authorizationStatus === AuthorizationStatus.NO_AUTH ? onBookmarkButtonClick() : dispatch(markFavorite(favoriteCardURL));
   };
 
   const {avatarUrl, isPro, name} = host;
 
-  const threeNearbyOffers = nearbyOffers.slice(0, 3);
-  const isNearPlaces = true;
-  const offersMap = [...threeNearbyOffers, {...hotel, isCurrentOffer: true}];
+  const nearbyMapOffers = [...nearbyOffers, {...hotel, isCurrentOffer: true}];
 
   return (
     <div className="page">
@@ -96,7 +83,7 @@ function RoomScreen(props) {
             <div className="property__gallery">
               {images.map((imageSrc) => (
                 <div className="property__image-wrapper" key={imageSrc}>
-                  <img className="property__image" src={imageSrc} alt="Photo studio"/>
+                  <img className="property__image" src={imageSrc} alt="studio"/>
                 </div>
               ),
               )}
@@ -121,7 +108,7 @@ function RoomScreen(props) {
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{width: `${Math.round(rating)*20}%`}}>
+                  <span style={{width: `${Math.round(rating)*STAR_RATING_PART}%`}}>
                   </span>
                   <span className="visually-hidden">Rating</span>
                 </div>
@@ -129,7 +116,7 @@ function RoomScreen(props) {
               </div>
               <ul className="property__features">
                 <li className="property__feature property__feature--entire">
-                  {toUpperFirstLetter(type)}
+                  {capitalizeFirstLetter(type)}
                 </li>
                 <li className="property__feature property__feature--bedrooms">
                   {bedrooms} Bedrooms
@@ -170,15 +157,15 @@ function RoomScreen(props) {
             </div>
           </div>
           <section className="property__map map">
-            <Map city={cityMap} activeCityPoints={offersMap} activeCardId={activeCardId}/>
+            <Map city={cityMap} activeCityPoints={nearbyMapOffers} activeCardId={activeCardId}/>
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <OfferCardsList
-              activeCityOffers={threeNearbyOffers}
-              isNearPlaces={isNearPlaces}
+              activeCityOffers={nearbyOffers}
+              isNearPlaces
               onCardHover={onActiveCardChange}
               onBookmarkButtonClick={onBookmarkButtonClick}
             />

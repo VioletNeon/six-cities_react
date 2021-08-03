@@ -13,8 +13,8 @@ describe('Reducer: active-card', () => {
 
   it('should set active hotel offer card id by given data', () => {
 
-    const activeCardId = 3;
+    const ACTIVE_CARD_ID = 3;
 
-    expect(activeCard(initialExpectedState, changeActiveCardId(activeCardId))).toEqual({activeCardId: 3,});
+    expect(activeCard(initialExpectedState, changeActiveCardId(ACTIVE_CARD_ID))).toEqual({activeCardId: 3});
   });
 });

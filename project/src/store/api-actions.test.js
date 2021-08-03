@@ -118,8 +118,8 @@ describe('Async operations', () => {
   it('should make a correct API call to POST /login', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const fakeUser = {email: 'test@test.ru', password: '123456'};
-    const loginLoader = login(fakeUser);
+    const FAKE_USER = {email: 'test@test.ru', password: '123456'};
+    const loginLoader = login(FAKE_USER);
 
     apiMock
       .onPost(APIRoute.LOGIN)
@@ -157,7 +157,7 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to GET /questions', () => {
+  it('should make a correct API call to GET /hotels', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
     const hotelsLoader = fetchHotelsList();
@@ -176,14 +176,14 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to GET /questions', () => {
+  it('should make a correct API call to GET /hotels/id', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const fakeURL = '/hotels/0';
-    const hotelLoader = fetchHotel(fakeURL);
+    const FAKE_URL = '/hotels/0';
+    const hotelLoader = fetchHotel(FAKE_URL);
 
     apiMock
-      .onGet(fakeURL)
+      .onGet(FAKE_URL)
       .reply(200, defaultHotelData);
 
     return hotelLoader(dispatch, () => {}, api)
@@ -196,14 +196,14 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to GET /questions', () => {
+  it('should make a correct API call to GET /hotels/id/nearby', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const fakeURL = '/hotels/0/nearby';
-    const nearbyHotelsLoader = fetchNearbyHotels(fakeURL);
+    const FAKE_URL = '/hotels/0/nearby';
+    const nearbyHotelsLoader = fetchNearbyHotels(FAKE_URL);
 
     apiMock
-      .onGet(fakeURL)
+      .onGet(FAKE_URL)
       .reply(200, [defaultHotelData]);
 
     return nearbyHotelsLoader(dispatch, () => {}, api)
@@ -216,14 +216,14 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to GET /questions', () => {
+  it('should make a correct API call to GET /comments/id', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const fakeURL = '/comments/0';
-    const commentsLoader = fetchComments(fakeURL);
+    const FAKE_URL = '/comments/0';
+    const commentsLoader = fetchComments(FAKE_URL);
 
     apiMock
-      .onGet(fakeURL)
+      .onGet(FAKE_URL)
       .reply(200, [{
         'user': {...defaultHotelData.host},
         'comment': 'Wow',
@@ -248,18 +248,18 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to GET /questions', () => {
+  it('should make a correct API call to POST /comments/id', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const fakeURL = '/comments/0';
+    const FAKE_URL = '/comments/0';
     const fakeComment = {
       'comment': 'Wow',
       'rating': '4',
     };
-    const commentsLoader = toComment(fakeURL, fakeComment);
+    const commentsLoader = toComment(FAKE_URL, fakeComment);
 
     apiMock
-      .onPost(fakeURL)
+      .onPost(FAKE_URL)
       .reply(200, [{
         'user': {...defaultHotelData.host},
         'comment': 'Wow',
@@ -284,7 +284,7 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to GET /questions', () => {
+  it('should make a correct API call to GET /favorite', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
     const favoriteHotelsLoader = fetchFavoriteHotels();
@@ -303,14 +303,14 @@ describe('Async operations', () => {
       });
   });
 
-  it('should make a correct API call to POST /login', () => {
+  it('should make a correct API call to POST /favorite/id/status', () => {
     const apiMock = new MockAdapter(api);
     const dispatch = jest.fn();
-    const fakeURL = '/favorite/0/1';
-    const offerLoader = markFavorite(fakeURL);
+    const FAKE_URL = '/favorite/0/1';
+    const offerLoader = markFavorite(FAKE_URL);
 
     apiMock
-      .onPost(fakeURL)
+      .onPost(FAKE_URL)
       .reply(200, defaultHotelData);
 
     return offerLoader(dispatch, () => {}, api)

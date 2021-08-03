@@ -14,18 +14,12 @@ function FavoritesScreen(props) {
   const favoriteOffers = useSelector(selectFavoriteOffers);
   const isFavoritesLoad = useSelector(selectFavoritesLoadState);
 
-  const onFavoriteSelect = () => {
-    dispatch(fetchFavoriteHotels());
-  };
-
-  const onFavoritesOut = () => {
-    dispatch(clearFavoritesData());
-  };
-
   useEffect(() => {
-    onFavoriteSelect();
-    return onFavoritesOut;
-  }, []);
+    dispatch(fetchFavoriteHotels());
+    return () => {
+      dispatch(clearFavoritesData());
+    };
+  }, [dispatch]);
 
   if (!isFavoritesLoad) { return <LoadingScreen />; }
 

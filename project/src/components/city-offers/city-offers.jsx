@@ -20,7 +20,7 @@ function CityOffers(props) {
     lng: longitude,
     zoom: zoom,
   };
-  const isNearPlaces = false;
+  const IS_NEAR_PLACES = false;
 
   return (
     <div className="cities__places-container container">
@@ -32,7 +32,7 @@ function CityOffers(props) {
           onSortTypeChange={onSortTypeChange}
         />
         <OfferCardsList
-          isNearPlaces={isNearPlaces}
+          isNearPlaces={IS_NEAR_PLACES}
           activeCityOffers={activeCityOffers}
           onCardHover={onActiveCardChange}
           onBookmarkButtonClick={onBookmarkButtonClick}

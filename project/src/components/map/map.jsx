@@ -23,9 +23,8 @@ function Map({city, activeCityPoints}) {
   const map = useMap(mapRef, city);
   const activeCardId = useSelector(selectActiveCardId);
 
-  let markers = [];
-
   useEffect(() => {
+    const markers = [];
     if (map) {
       activeCityPoints.forEach((point) => {
         markers.push(
@@ -44,8 +43,6 @@ function Map({city, activeCityPoints}) {
       markers.forEach((marker) => {
         map.removeLayer(marker);
       });
-      markers = [];
-
     };
   }, [map, activeCityPoints, activeCardId]);
 

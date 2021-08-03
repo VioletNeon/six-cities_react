@@ -29,7 +29,7 @@ describe('Actions', () => {
       zoom: '11',
     };
 
-    const name = 'correct-city';
+    const NAME = 'correct-city';
 
     const location = {
       latitude: '55',
@@ -37,7 +37,7 @@ describe('Actions', () => {
       zoom: '11',
     };
 
-    expect(changeCityOffers(location, name)).toEqual(expectedAction);
+    expect(changeCityOffers(location, NAME)).toEqual(expectedAction);
   });
 
   it('action creator for changing offers sorting returns correct action', () => {
@@ -57,9 +57,9 @@ describe('Actions', () => {
       activeCardId: 0,
     };
 
-    const activeCardId = 0;
+    const ACTIVE_CARD_ID = 0;
 
-    expect(changeActiveCardId(activeCardId)).toEqual(expectedAction);
+    expect(changeActiveCardId(ACTIVE_CARD_ID)).toEqual(expectedAction);
   });
 
   it('action creator for loading hotels offers returns correct action', () => {
@@ -204,9 +204,9 @@ describe('Actions', () => {
       authorizationStatus: 'correct-status',
     };
 
-    const authorizationStatus = 'correct-status';
+    const AUTHORIZATION_STATUS = 'correct-status';
 
-    expect(requireAuthorization(authorizationStatus)).toEqual(expectedAction);
+    expect(requireAuthorization(AUTHORIZATION_STATUS)).toEqual(expectedAction);
   });
 
   it('action creator for clearing auth data', () => {
@@ -223,9 +223,9 @@ describe('Actions', () => {
       payload: 'correct-url',
     };
 
-    const payload = 'correct-url';
+    const PAYLOAD = 'correct-url';
 
-    expect(redirectToRoute(payload)).toEqual(expectedAction);
+    expect(redirectToRoute(PAYLOAD)).toEqual(expectedAction);
   });
 
   it('action creator for clearing hotels offers data list return correct action', () => {
